@@ -36,17 +36,17 @@ actual class GraphManager {
         calculator?.setBlank()
     }
 
-    actual fun plotPoints(points: List<Point>) {
-        val pointsStr = points.joinToString(",") { "(${it.x},${it.y})" }
-        calculator?.setExpression(js("""
-            {
-                id: "points",
-                latex: pointsStr,
-                style: "points",
-                color: "#0C24A4"
-            }
-        """))
-    }
+//    actual fun plotPoints(points: List<Point>) {
+//        val pointsStr = points.joinToString(",") { "(${it.x},${it.y})" }
+//        calculator?.setExpression(js("""
+//            {
+//                id: "points",
+//                latex: pointsStr,
+//                style: "points",
+//                color: "#0C24A4"
+//            }
+//        """))
+//    }
 
     actual fun plotFunction(expression: String, color: String, hidden: Boolean) {
         calculator?.setExpression(js("""

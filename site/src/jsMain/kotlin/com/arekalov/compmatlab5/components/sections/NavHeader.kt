@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.arekalov.compmatlab5.common.GITHUB_URI
 import com.arekalov.compmatlab5.common.PAGE_TITLE
+import com.arekalov.compmatlab5.common.StringResources.CHANGE_THEME_STR
 import com.arekalov.compmatlab5.components.widgets.AppButton
 import com.arekalov.compmatlab5.components.widgets.AppText
 import com.arekalov.compmatlab5.toSitePalette

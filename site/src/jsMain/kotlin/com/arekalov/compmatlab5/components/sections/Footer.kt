@@ -2,6 +2,8 @@ package com.arekalov.compmatlab5.components.sections
 
 import androidx.compose.runtime.Composable
 import com.arekalov.compmatlab5.common.GITHUB_URI
+import com.arekalov.compmatlab5.common.StringResources.MADE_BY_STR
+import com.arekalov.compmatlab5.common.StringResources.SOURCE_CODE_STR
 import com.arekalov.compmatlab5.toSitePalette
 import com.varabyte.kobweb.compose.css.TextAlign
 import com.varabyte.kobweb.compose.css.WhiteSpace
@@ -23,7 +25,7 @@ import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.dom.Span
 
 val FooterStyle = CssStyle.base {
-    backgroundColor(colorMode.toSitePalette().cobweb)
+    Modifier.background(colorMode.toSitePalette().cobweb)
         .padding(topBottom = 1.cssRem, leftRight = 10.percent)
 }
 

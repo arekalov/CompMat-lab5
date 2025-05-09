@@ -1,5 +1,9 @@
 package com.arekalov.compmatlab5.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.arekalov.compmatlab5.data.GraphManager
 import com.arekalov.compmatlab5.models.*
 import com.arekalov.compmatlab5.logic.InterpolationLogicController
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -7,6 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.*
 
 class InterpolationViewModel {
+    private val graphManager = GraphManager()
+
+    var isDarkTheme by mutableStateOf(true)
+
     // Состояния для UI
     private val _points = MutableStateFlow<List<DataPoint>>(emptyList())
     val points: StateFlow<List<DataPoint>> = _points
@@ -104,5 +112,10 @@ class InterpolationViewModel {
         } else {
             _finiteDifferenceTable.value = null
         }
+    }
+
+    fun setTheme(isDark: Boolean) {
+        isDarkTheme = isDark
+        graphManager.setTheme(isDark)
     }
 } 
