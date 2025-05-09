@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import com.arekalov.compmatlab5.models.*
 import com.arekalov.compmatlab5.viewmodel.InterpolationViewModel
 import com.arekalov.compmatlab5.components.widgets.*
+import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.foundation.layout.Row
@@ -19,7 +20,10 @@ import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.FileInput
 
 @Composable
-fun DataInputSection(viewModel: InterpolationViewModel) {
+fun DataInputSection(
+    modifier: Modifier = Modifier,
+    viewModel: InterpolationViewModel
+) {
     var inputText by remember { mutableStateOf("") }
     var x0Text by remember { mutableStateOf("") }
     var intervalA by remember { mutableStateOf("") }
@@ -27,15 +31,12 @@ fun DataInputSection(viewModel: InterpolationViewModel) {
     var nPoints by remember { mutableStateOf("8") }
 
     val inputType = viewModel.inputType.collectAsState().value
-    val functionType = viewModel.functionType.collectAsState().value
 
     BorderBox(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier
     ) {
         Column(
-            modifier = Modifier
-                .padding(1.cssRem)
+            verticalArrangement = Arrangement.Top,
         ) {
             AppLabel("Ввод данных", modifier = Modifier.padding(bottom = 1.cssRem))
 

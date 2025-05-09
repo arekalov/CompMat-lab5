@@ -11,6 +11,8 @@ import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import org.jetbrains.compose.web.css.cssRem
 import com.arekalov.compmatlab5.common.formatNumber
+import com.varabyte.kobweb.compose.foundation.layout.ColumnDefaults.HorizontalAlignment
+import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
 
 @Composable
@@ -19,8 +21,14 @@ fun ResultSection(viewModel: InterpolationViewModel) {
     val error = viewModel.error.collectAsState().value
     val table = viewModel.finiteDifferenceTable.collectAsState().value
 
-    BorderBox(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.padding(1.cssRem)) {
+    BorderBox(
+        contentAlignment = Alignment.TopStart,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.padding(1.cssRem)
+        ) {
             AppLabel("Результаты", modifier = Modifier.padding(bottom = 1.cssRem))
             
             if (error != null) {

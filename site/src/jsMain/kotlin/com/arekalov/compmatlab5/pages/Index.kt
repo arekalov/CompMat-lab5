@@ -23,38 +23,38 @@ fun Index() {
         title = PAGE_TITLE,
         onThemeChanged = viewModel::setTheme
     ) {
-        Row(
+        Column(
+            verticalArrangement = Arrangement.spacedBy(1.cssRem),
             modifier = Modifier
                 .padding(1.cssRem)
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.Top
+                .fillMaxSize(),
         ) {
-            Column(
+            Row(
                 modifier = Modifier
-                    .padding(right = 1.cssRem)
-                    .width(40.cssRem)
-                    .fillMaxHeight()
-                    .overflow(Overflow.Auto),
-                verticalArrangement = Arrangement.spacedBy(1.cssRem),
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(1.cssRem),
+                verticalAlignment = Alignment.Top
             ) {
-                DataInputSection(viewModel = viewModel)
-                ResultSection(viewModel = viewModel)
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.cssRem)
-            ) {
-                GraphSection(
+                DataInputSection(
+                    modifier = Modifier
+                        .width(30.cssRem)
+                        .height(40.cssRem),
+                    viewModel = viewModel
+                )
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(),
-                )
+                        .height(40.cssRem)
+                ) {
+                    GraphSection(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(),
+                    )
+                }
             }
+
+            ResultSection(viewModel = viewModel)
         }
     }
 }
