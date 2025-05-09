@@ -26,9 +26,6 @@ class InterpolationViewModel {
     private val _x0 = MutableStateFlow<Double?>(null)
     val x0: StateFlow<Double?> = _x0
 
-    private val _selectedMethod = MutableStateFlow<String>("Ньютон")
-    val selectedMethod: StateFlow<String> = _selectedMethod
-
     private val _result = MutableStateFlow<InterpolationResult?>(null)
     val result: StateFlow<InterpolationResult?> = _result
 
@@ -79,14 +76,9 @@ class InterpolationViewModel {
         _x0.value = newX0
     }
 
-    fun setMethod(method: String) {
-        _selectedMethod.value = method
-    }
-
     fun calculate() {
         val points = _points.value
         val x0 = _x0.value
-        val method = _selectedMethod.value
 
         if (points.isEmpty() || x0 == null) {
             _error.value = "Введите точки и значение x0"
@@ -94,14 +86,15 @@ class InterpolationViewModel {
         }
 
         try {
-            val value = when (method) {
-                "Ньютон" -> InterpolationLogicController.newton(points, x0)
-                "Лагранж" -> InterpolationLogicController.lagrange(points, x0)
-                else -> throw IllegalArgumentException("Неизвестный метод")
-            }
+            val lagrangeValue = InterpolationLogicController.lagrange(points, x0)
+            val newtonValue = InterpolationLogicController.newton(points, x0)
+
+            val tValue = InterpolationLogicController.getT(points, x0)
+
             _result.value = InterpolationResult(
-                method = method,
-                value = value
+                lagrangeValue = lagrangeValue,
+                newtonValue = newtonValue,
+                tValue = tValue
             )
             _error.value = null
         } catch (e: Exception) {

@@ -20,23 +20,16 @@ fun ResultSection(viewModel: InterpolationViewModel) {
     val table = viewModel.finiteDifferenceTable.collectAsState().value
 
     BorderBox(modifier = Modifier.fillMaxSize()) {
-        Column {
-
-            AppLabel("Результаты", modifier = Modifier.padding(bottom = 0.75.cssRem))
+        Column(modifier = Modifier.padding(1.cssRem)) {
+            AppLabel("Результаты", modifier = Modifier.padding(bottom = 1.cssRem))
+            
             if (error != null) {
-                AppText("Ошибка: $error", color = AppColors.Error, modifier = Modifier.padding(bottom = 0.5.cssRem))
+                AppText("Ошибка: $error", color = AppColors.Error, modifier = Modifier.padding(bottom = 1.cssRem))
             }
-            if (result != null) {
-                AppSecondaryText("Метод: ${result.method}")
-                AppText(
-                    "Значение в x₀: ${formatNumber(result.value)}",
-                    color = AppColors.Success,
-                    modifier = Modifier.padding(bottom = 0.5.cssRem)
-                )
-            }
+
             if (table != null) {
                 AppSecondaryText("Таблица конечных разностей:", modifier = Modifier.padding(bottom = 0.5.cssRem))
-                Column {
+                Column(modifier = Modifier.padding(bottom = 1.cssRem)) {
                     Row {
                         AppSecondaryText("x", modifier = Modifier.width(3.5.cssRem))
                         table.x.forEach { x ->
@@ -52,6 +45,39 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                         }
                     }
                 }
+                // t после таблицы
+                val points = viewModel.points.collectAsState().value
+                val x0 = viewModel.x0.collectAsState().value
+                if (points.isNotEmpty() && x0 != null && result != null) {
+                    val h = points[1].x - points[0].x
+                    AppSecondaryText("t для равномерной сетки:", modifier = Modifier.padding(bottom = 0.25.cssRem))
+                    AppText(
+                        "t = (x₀ - x₀*) / h",
+                        modifier = Modifier.padding(bottom = 0.1.cssRem)
+                    )
+                    AppText(
+                        "t = (${formatNumber(x0)} - ${formatNumber(points[0].x)}) / ${formatNumber(h)} = ${formatNumber(result.tValue)}",
+                        modifier = Modifier.padding(bottom = 1.cssRem)
+                    )
+                }
+            }
+
+            if (result != null) {
+                // Метод Лагранжа
+                AppSecondaryText("Метод Лагранжа:", modifier = Modifier.padding(bottom = 0.5.cssRem))
+                AppText(
+                    "Значение в x₀: ${formatNumber(result.lagrangeValue)}",
+                    color = AppColors.Success,
+                    modifier = Modifier.padding(bottom = 1.cssRem)
+                )
+
+                // Метод Ньютона
+                AppSecondaryText("Метод Ньютона:", modifier = Modifier.padding(bottom = 0.5.cssRem))
+                AppText(
+                    "Значение в x₀: ${formatNumber(result.newtonValue)}",
+                    color = AppColors.Success,
+                    modifier = Modifier.padding(bottom = 0.5.cssRem)
+                )
             }
         }
     }
