@@ -13,6 +13,10 @@ import kotlin.math.*
 class InterpolationViewModel {
     private val graphManager = GraphManager()
 
+    init {
+        graphManager.initGraph()
+    }
+
     var isDarkTheme by mutableStateOf(true)
 
     // Состояния для UI

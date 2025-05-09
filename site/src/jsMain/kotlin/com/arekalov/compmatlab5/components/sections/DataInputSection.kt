@@ -1,62 +1,17 @@
-package com.arekalov.compmatlab5.pages
+package com.arekalov.compmatlab5.components.sections
 
-import androidx.compose.runtime.Composable
-import com.arekalov.compmatlab5.common.PAGE_TITLE
-import com.arekalov.compmatlab5.components.layouts.PageLayout
-import com.arekalov.compmatlab5.components.sections.DataInputSection
-import com.arekalov.compmatlab5.components.sections.GraphSection
-import com.arekalov.compmatlab5.components.sections.ResultSection
+import androidx.compose.runtime.*
+import com.arekalov.compmatlab5.models.*
 import com.arekalov.compmatlab5.viewmodel.InterpolationViewModel
-import com.varabyte.kobweb.compose.css.Overflow
-import com.varabyte.kobweb.compose.foundation.layout.*
+import com.arekalov.compmatlab5.components.widgets.*
+import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.*
-import com.varabyte.kobweb.core.Page
-import com.varabyte.kobweb.compose.ui.Alignment
-import org.jetbrains.compose.web.css.*
-
-@Page
-@Composable
-fun Index() {
-    val viewModel = InterpolationViewModel()
-    PageLayout(
-        title = PAGE_TITLE,
-        onThemeChanged = viewModel::setTheme
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .overflow(Overflow.Auto),
-                verticalArrangement = Arrangement.spacedBy(1.cssRem),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                DataInputSection(viewModel = viewModel)
-                ResultSection(viewModel = viewModel)
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(1.cssRem)
-            ) {
-                GraphSection(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                )
-            }
-        }
-    }
-}
+import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
+import com.varabyte.kobweb.compose.ui.modifiers.height
+import com.varabyte.kobweb.compose.ui.modifiers.padding
+import com.varabyte.kobweb.compose.ui.modifiers.width
+import org.jetbrains.compose.web.css.cssRem
 
 @Composable
 fun DataInputSection(viewModel: InterpolationViewModel) {
@@ -85,7 +40,10 @@ fun DataInputSection(viewModel: InterpolationViewModel) {
             }
 
             if (inputType == InputType.MANUAL) {
-                AppSecondaryText("Формат: x y (по одной паре на строку)", modifier = Modifier.padding(bottom = 0.5.cssRem))
+                AppSecondaryText(
+                    "Формат: x y (по одной паре на строку)",
+                    modifier = Modifier.padding(bottom = 0.5.cssRem)
+                )
                 AppText(
                     text = inputText,
                     modifier = Modifier
@@ -128,6 +86,7 @@ fun DataInputSection(viewModel: InterpolationViewModel) {
                 }
                 Row(modifier = Modifier.padding(bottom = 0.5.cssRem)) {
                     AppNumberField(
+                        value = intervalA,
                         onValueChanged = { intervalA = it },
                         modifier = Modifier.width(4.5.cssRem).padding(right = 0.5.cssRem)
                     )
@@ -175,4 +134,3 @@ fun DataInputSection(viewModel: InterpolationViewModel) {
         }
     }
 }
-
