@@ -17,6 +17,7 @@ import org.jetbrains.compose.web.css.cssRem
 
 @Composable
 fun ResultSection(viewModel: InterpolationViewModel) {
+    val points = viewModel.points.collectAsState().value
     val result = viewModel.result.collectAsState().value
     val error = viewModel.error.collectAsState().value
     val table = viewModel.finiteDifferenceTable.collectAsState().value
@@ -38,6 +39,22 @@ fun ResultSection(viewModel: InterpolationViewModel) {
 
             if (error != null) {
                 AppText("Ошибка: $error", color = AppColors.Error, modifier = Modifier.padding(bottom = 1.cssRem))
+            }
+
+            if (points.isNotEmpty()) {
+                AppSecondaryText(
+                    "Сгенерированные точки:",
+                    modifier = Modifier.padding(top = 0.5.cssRem, bottom = 0.5.cssRem)
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.5.cssRem)
+                ) {
+                    points.forEach { point ->
+                        AppText("x = ${formatNumber(point.x, 4)}, y = ${formatNumber(point.y, 4)}")
+                    }
+                }
             }
 
             if (table != null) {

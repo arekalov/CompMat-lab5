@@ -101,6 +101,13 @@ class InterpolationViewModel {
         }
     }
 
+    fun clearState() {
+        _points.value = emptyList()
+        _result.value = null
+        _finiteDifferenceTable.value = null
+
+    }
+
     private fun recalculateTable() {
         val points = _points.value
         if (points.isNotEmpty()) {

@@ -1,6 +1,7 @@
 package com.arekalov.compmatlab5.components.sections
 
 import androidx.compose.runtime.*
+import com.arekalov.compmatlab5.common.formatNumber
 import com.arekalov.compmatlab5.models.*
 import com.arekalov.compmatlab5.viewmodel.InterpolationViewModel
 import com.arekalov.compmatlab5.components.widgets.*
@@ -32,6 +33,7 @@ fun DataInputSection(
     var intervalB by remember { mutableStateOf("") }
     var nPoints by remember { mutableStateOf("8") }
 
+    val points = viewModel.points.collectAsState().value
     val inputType = viewModel.inputType.collectAsState().value
     val functionType = viewModel.functionType.collectAsState().value
 
@@ -56,7 +58,14 @@ fun DataInputSection(
                 InputType.values().forEach { type ->
                     AppButton(
                         isEnabled = inputType != type,
-                        onClick = { viewModel.setInputType(type) },
+                        onClick = {
+                            viewModel.setInputType(type)
+                            viewModel.clearState()
+                            nPoints = "8"
+                            intervalA = ""
+                            intervalB = ""
+                            x0Text = ""
+                        },
                         modifier = Modifier.padding(right = 0.5.cssRem)
                     ) {
                         AppLabel(type.name, fontSize = 1.0, color = AppColors.Primary)
@@ -138,25 +147,6 @@ fun DataInputSection(
                                 }
                             }
                     )
-
-                    // Отображение загруженных точек
-                    val points = viewModel.points.collectAsState().value
-                    if (points.isNotEmpty()) {
-                        AppSecondaryText(
-                            "Загруженные точки:",
-                            modifier = Modifier.padding(top = 1.cssRem, bottom = 0.5.cssRem)
-                        )
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(10.cssRem)
-                                .padding(0.5.cssRem)
-                        ) {
-                            points.forEach { point ->
-                                AppText("x = ${point.x}, y = ${point.y}")
-                            }
-                        }
-                    }
                 }
 
                 InputType.FUNCTION -> {
@@ -171,7 +161,12 @@ fun DataInputSection(
                         FunctionType.values().forEach { type ->
                             AppButton(
                                 isEnabled = functionType != type,
-                                onClick = { viewModel.setFunctionType(type) },
+                                onClick = {
+                                    viewModel.run {
+                                        clearState()
+                                        setFunctionType(type)
+                                    }
+                                },
                                 modifier = Modifier.padding(right = 0.5.cssRem)
                             ) {
                                 AppText(
@@ -182,11 +177,14 @@ fun DataInputSection(
                     }
                     Column(modifier = Modifier.padding(bottom = 0.5.cssRem)) {
                         AppSecondaryText("Интервал [a, b]:", modifier = Modifier.padding(bottom = 0.25.cssRem))
-                        Row(modifier = Modifier.padding(bottom = 0.5.cssRem)) {
+                        Row(
+                            modifier = Modifier.padding(bottom = 0.5.cssRem),
+                            horizontalArrangement = Arrangement.spacedBy(0.5.cssRem)
+                        ) {
                             AppNumberField(
                                 value = intervalA,
                                 onValueChanged = { intervalA = it },
-                                modifier = Modifier.width(4.5.cssRem).padding(right = 0.5.cssRem)
+                                modifier = Modifier.width(4.5.cssRem)
                             )
                             AppNumberField(
                                 value = intervalB,
