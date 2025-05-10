@@ -29,8 +29,8 @@ fun DataInputSection(
 ) {
     var inputText by remember { mutableStateOf("") }
     var x0Text by remember { mutableStateOf("") }
-    var intervalA by remember { mutableStateOf("") }
-    var intervalB by remember { mutableStateOf("") }
+    var intervalA by remember { mutableStateOf("0") }
+    var intervalB by remember { mutableStateOf("1") }
     var nPoints by remember { mutableStateOf("8") }
 
     val inputType = viewModel.inputType.collectAsState().value
@@ -61,8 +61,8 @@ fun DataInputSection(
                             viewModel.setInputType(type)
                             viewModel.clearState()
                             nPoints = "8"
-                            intervalA = ""
-                            intervalB = ""
+                            intervalA = "0"
+                            intervalB = "1"
                             x0Text = ""
                         },
                         modifier = Modifier.padding(right = 0.5.cssRem)

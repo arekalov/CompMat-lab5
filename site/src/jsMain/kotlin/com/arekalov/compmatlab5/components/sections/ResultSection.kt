@@ -115,7 +115,7 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                 AppSecondaryText("Метод Лагранжа:", modifier = Modifier.padding(bottom = 0.5.cssRem))
                 AppText(
                     "Значение в x₀: ${formatNumber(result.lagrangeValue)}",
-                    color = AppColors.Success,
+                    color = AppColors.Error,
                     modifier = Modifier.padding(bottom = 1.cssRem)
                 )
 

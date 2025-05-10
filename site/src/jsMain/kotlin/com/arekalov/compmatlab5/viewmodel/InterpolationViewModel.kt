@@ -3,6 +3,7 @@ package com.arekalov.compmatlab5.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import com.arekalov.compmatlab5.components.widgets.AppColors
 import com.arekalov.compmatlab5.data.GraphManager
 import com.arekalov.compmatlab5.models.*
 import com.arekalov.compmatlab5.logic.InterpolationLogicController
@@ -99,9 +100,22 @@ class InterpolationViewModel {
             )
             _error.value = null
 
-            // Отображаем многочлен Лагранжа на графике
+            // Отображаем многочлены на графике
             val lagrangePolynomial = InterpolationLogicController.getLagrangePolynomial(points)
-            graphManager.plotFunction(lagrangePolynomial, "#FF0000", false)
+            val newtonPolynomial = InterpolationLogicController.getNewtonPolynomial(points)
+
+            // Многочлен Лагранжа красным цветом
+            graphManager.plotFunction(
+                lagrangePolynomial, if (isDarkTheme) {
+                    "#${AppColors.errorIversedString}"
+                } else "#${AppColors.errorString}", false
+            )
+            // Многочлен Ньютона зеленым цветом
+            graphManager.plotFunction(
+                newtonPolynomial, if (isDarkTheme) {
+                    "#${AppColors.successSInversedtSring}"
+                } else "#${AppColors.successString}", false
+            )
         } catch (e: Exception) {
             _error.value = "Ошибка вычисления: ${e.message}"
         }
