@@ -103,7 +103,7 @@ fun DataInputSection(
                                         }
                                     } else null
                                 }
-                            viewModel.setPoints(points)
+                            viewModel.updatePoints(points)
                         },
                         modifier = Modifier.padding(top = 0.5.cssRem)
                     ) {
@@ -139,7 +139,7 @@ fun DataInputSection(
                                                         } else null
                                                     } else null
                                                 }
-                                            points?.let { viewModel.setPoints(it) }
+                                            points?.let { viewModel.updatePoints(it) }
                                         }
                                         reader.readAsText(file)
                                     }
@@ -219,7 +219,7 @@ fun DataInputSection(
                 value = x0Text,
                 onValueChanged = {
                     x0Text = it
-                    it.toDoubleOrNull()?.let(viewModel::setX0)
+                    it.toDoubleOrNull()?.let(viewModel::updateX0)
                 },
                 modifier = Modifier.width(7.cssRem)
             )

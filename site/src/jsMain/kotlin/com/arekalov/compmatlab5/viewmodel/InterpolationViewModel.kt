@@ -5,38 +5,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.arekalov.compmatlab5.components.widgets.AppColors
 import com.arekalov.compmatlab5.data.GraphManager
+import com.arekalov.compmatlab5.logic.*
 import com.arekalov.compmatlab5.models.*
-import com.arekalov.compmatlab5.logic.InterpolationLogicController
+import com.arekalov.compmatlab5.theme.JsThemeColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlin.math.*
+import com.varabyte.kobweb.compose.ui.graphics.Color
 
 class InterpolationViewModel {
     private val graphManager = GraphManager()
 
     init {
         graphManager.initGraph()
+        // Инициализируем цвета для всех методов интерполяции
+        LagrangeInterpolation.init(JsThemeColors)
+        NewtonInterpolation.init(JsThemeColors)
+        GaussInterpolation.init(JsThemeColors)
+        StirlingInterpolation.init(JsThemeColors)
+        BesselInterpolation.init(JsThemeColors)
     }
 
     var isDarkTheme by mutableStateOf(true)
 
-    // Состояния для UI
-    private val _points = MutableStateFlow<List<DataPoint>>(emptyList())
-    val points: StateFlow<List<DataPoint>> = _points
+    private val _state = MutableStateFlow(InterpolationState())
+    val state: StateFlow<InterpolationState> = _state.asStateFlow()
 
-    private val _x0 = MutableStateFlow<Double?>(null)
-    val x0: StateFlow<Double?> = _x0
-
-    private val _result = MutableStateFlow<InterpolationResult?>(null)
-    val result: StateFlow<InterpolationResult?> = _result
-
-    private val _finiteDifferenceTable = MutableStateFlow<FiniteDifferenceTable?>(null)
-    val finiteDifferenceTable: StateFlow<FiniteDifferenceTable?> = _finiteDifferenceTable
-
-    private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error
-
-    // Новый функционал:
     private val _inputType = MutableStateFlow<InputType>(InputType.MANUAL)
     val inputType: StateFlow<InputType> = _inputType
 
@@ -51,7 +47,6 @@ class InterpolationViewModel {
         _functionType.value = type
     }
 
-    // Генерация точек по выбранной функции
     fun generatePointsByFunction(a: Double, b: Double, n: Int) {
         val func = when (_functionType.value) {
             FunctionType.SIN -> { x: Double -> sin(x) }
@@ -63,99 +58,147 @@ class InterpolationViewModel {
             val x = a + i * step
             DataPoint(x, func(x))
         }
-        setPoints(points)
+        updatePoints(points)
     }
 
-    // Методы для UI
-    fun setPoints(newPoints: List<DataPoint>) {
-        _points.value = newPoints
-        recalculateTable()
+    fun updatePoints(points: List<DataPoint>) {
+        _state.update { currentState ->
+            currentState.copy(
+                points = points,
+                finiteDifferenceTable = InterpolationLogicController.buildFiniteDifferenceTable(points)
+            )
+        }
         graphManager.clearGraph()
-        graphManager.plotPoints(newPoints)
+        graphManager.plotPoints(points)
     }
 
-    fun setX0(newX0: Double?) {
-        _x0.value = newX0
+    fun updateX0(x0: Double) {
+        _state.update { it.copy(x0 = x0) }
     }
 
     fun calculate() {
-        val points = _points.value
-        val x0 = _x0.value
+        val currentState = _state.value
+        val points = currentState.points
+        val x0 = currentState.x0
 
         if (points.isEmpty() || x0 == null) {
-            _error.value = "Введите точки и значение x0"
+            _state.update { it.copy(error = "Введите точки и значение x0") }
             return
         }
 
         try {
-            val lagrangeValue = InterpolationLogicController.lagrange(points, x0)
-            val newtonValue = InterpolationLogicController.newton(points, x0)
+            val results = mutableListOf<InterpolationResult>()
 
-            val tValue = InterpolationLogicController.getT(points, x0)
+            // Лагранж всегда доступен
+            val lagrangeResult = InterpolationLogicController.interpolate(points, x0, LagrangeInterpolation)
+            results.add(InterpolationResult(
+                methodName = "Многочлен Лагранжа",
+                value = lagrangeResult.first,
+                polynomial = lagrangeResult.second,
+                colorString = LagrangeInterpolation.colorString,
+                invertedColorString = LagrangeInterpolation.invertedColorString,
+                color = LagrangeInterpolation.color,
+                invertedColor = LagrangeInterpolation.colorInverted
+            ))
 
-            _result.value = InterpolationResult(
-                lagrangeValue = lagrangeValue,
-                newtonValue = newtonValue,
-                tValue = tValue
-            )
-            _error.value = null
+            // Ньютон с конечными разностями
+            if (InterpolationLogicController.isValidForFiniteDifferences(points)) {
+                val newtonResult = InterpolationLogicController.interpolate(points, x0, NewtonInterpolation)
+                results.add(InterpolationResult(
+                    methodName = "Многочлен Ньютона",
+                    value = newtonResult.first,
+                    polynomial = newtonResult.second,
+                    colorString = NewtonInterpolation.colorString,
+                    invertedColorString = NewtonInterpolation.invertedColorString,
+                    color = NewtonInterpolation.color,
+                    invertedColor = NewtonInterpolation.colorInverted
+                ))
+            }
 
-            // Отображаем многочлены на графике
-            val lagrangePolynomial = InterpolationLogicController.getLagrangePolynomial(points)
-            val newtonPolynomial = InterpolationLogicController.getNewtonPolynomial(points)
-            
-            // Многочлен Лагранжа красным цветом
-            graphManager.plotFunction(
-                lagrangePolynomial, if (isDarkTheme) {
-                    "#${AppColors.errorIversedString}"
-                } else "#${AppColors.errorString}", false
-            )
-            // Многочлен Ньютона зеленым цветом
-            graphManager.plotFunction(
-                newtonPolynomial, if (isDarkTheme) {
-                    "#${AppColors.successSInversedtSring}"
-                } else "#${AppColors.successString}", false
-            )
+            // Гаусс
+            if (InterpolationLogicController.isValidForGaussOrStirling(points)) {
+                val gaussResult = InterpolationLogicController.interpolate(points, x0, GaussInterpolation)
+                results.add(InterpolationResult(
+                    methodName = "Многочлен Гаусса",
+                    value = gaussResult.first,
+                    polynomial = gaussResult.second,
+                    colorString = GaussInterpolation.colorString,
+                    invertedColorString = GaussInterpolation.invertedColorString,
+                    color = GaussInterpolation.color,
+                    invertedColor = GaussInterpolation.colorInverted
+                ))
+            }
 
-            // Отображаем точку x₀ и значения y
-            val lagrangePoint = "(${x0}, ${lagrangeValue})"
-            val newtonPoint = "(${x0}, ${newtonValue})"
-            
-            // Точка для метода Лагранжа
-            graphManager.plotFunction(
-                lagrangePoint, if (isDarkTheme) {
-                    "#${AppColors.errorIversedString}"
-                } else "#${AppColors.errorString}", false
-            )
-            // Точка для метода Ньютона
-            graphManager.plotFunction(
-                newtonPoint, if (isDarkTheme) {
-                    "#${AppColors.successSInversedtSring}"
-                } else "#${AppColors.successString}", false
-            )
+            // Стирлинг
+            if (InterpolationLogicController.isValidForGaussOrStirling(points)) {
+                val stirlingResult = InterpolationLogicController.interpolate(points, x0, StirlingInterpolation)
+                results.add(InterpolationResult(
+                    methodName = "Многочлен Стирлинга",
+                    value = stirlingResult.first,
+                    polynomial = stirlingResult.second,
+                    colorString = StirlingInterpolation.colorString,
+                    invertedColorString = StirlingInterpolation.invertedColorString,
+                    color = StirlingInterpolation.color,
+                    invertedColor = StirlingInterpolation.colorInverted
+                ))
+            }
+
+            // Бессель
+            if (InterpolationLogicController.isValidForBessel(points)) {
+                val besselResult = InterpolationLogicController.interpolate(points, x0, BesselInterpolation)
+                results.add(InterpolationResult(
+                    methodName = "Многочлен Бесселя",
+                    value = besselResult.first,
+                    polynomial = besselResult.second,
+                    colorString = BesselInterpolation.colorString,
+                    invertedColorString = BesselInterpolation.invertedColorString,
+                    color = BesselInterpolation.color,
+                    invertedColor = BesselInterpolation.colorInverted
+                ))
+            }
+
+            _state.update { it.copy(
+                interpolationResults = results,
+                error = null
+            ) }
+
+            // Отображаем все полиномы на графике
+            results.forEach { result ->
+                graphManager.plotFunction(result.polynomial, getCurrentStringColor(color = result.colorString, inverted = result.invertedColorString), false)
+            }
+
+            // Отображаем точку x₀ и значения y для каждого метода
+//            results.forEach { result ->
+//                val point = "(${x0}, ${result.value})"
+//                graphManager.plotFunction(point, getCurrentStringColor(color = result.colorString, inverted = result.invertedColorString), false)
+//            }
+
         } catch (e: Exception) {
-            _error.value = "Ошибка вычисления: ${e.message}"
+            _state.update { it.copy(error = "Ошибка вычисления: ${e.message}") }
         }
     }
 
     fun clearState() {
-        _points.value = emptyList()
-        _result.value = null
-        _finiteDifferenceTable.value = null
+        _state.update { InterpolationState() }
         graphManager.clearGraph()
-    }
-
-    private fun recalculateTable() {
-        val points = _points.value
-        if (points.isNotEmpty()) {
-            _finiteDifferenceTable.value = InterpolationLogicController.buildFiniteDifferenceTable(points)
-        } else {
-            _finiteDifferenceTable.value = null
-        }
     }
 
     fun setTheme(isDark: Boolean) {
         isDarkTheme = isDark
         graphManager.setTheme(isDark)
     }
-} 
+
+    fun getCurrentStringColor(color: String, inverted: String) = if (isDarkTheme) inverted else color
+    fun getCurrentColor(color: Color, inverted: Color) = if (!isDarkTheme) inverted else color
+
+
+}
+
+data class InterpolationState(
+    val points: List<DataPoint> = emptyList(),
+    val x0: Double? = null,
+    val finiteDifferenceTable: FiniteDifferenceTable? = null,
+    val interpolationResults: List<InterpolationResult> = emptyList(),
+    val error: String? = null
+)
+

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.arekalov.compmatlab5.common.formatNumber
 import com.arekalov.compmatlab5.components.widgets.*
+import com.arekalov.compmatlab5.models.InterpolationResult
 import com.arekalov.compmatlab5.viewmodel.InterpolationViewModel
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -13,14 +14,17 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
+import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.cssRem
 
 @Composable
 fun ResultSection(viewModel: InterpolationViewModel) {
-    val points = viewModel.points.collectAsState().value
-    val result = viewModel.result.collectAsState().value
-    val error = viewModel.error.collectAsState().value
-    val table = viewModel.finiteDifferenceTable.collectAsState().value
+    val state = viewModel.state.collectAsState().value
+    val points = state.points
+    val x0 = state.x0
+    val table = state.finiteDifferenceTable
+    val results = state.interpolationResults
+    val error = state.error
 
     BorderBox(
         contentAlignment = Alignment.TopStart,
@@ -52,7 +56,7 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                         .padding(0.5.cssRem)
                 ) {
                     points.forEach { point ->
-                        AppText("x = ${formatNumber(point.x, 4)}, y = ${formatNumber(point.y, 4)}")
+                        AppText("${formatNumber(point.x, 4)} ${formatNumber(point.y, 4)}")
                     }
                 }
             }
@@ -89,43 +93,22 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                         }
                     }
                 }
-                // t после таблицы
-                val points = viewModel.points.collectAsState().value
-                val x0 = viewModel.x0.collectAsState().value
-                if (points.isNotEmpty() && x0 != null && result != null) {
-                    val h = points[1].x - points[0].x
-                    AppSecondaryText("t для равномерной сетки:", modifier = Modifier.padding(bottom = 0.25.cssRem))
+            }
+
+            if (results.isNotEmpty()) {
+                results.forEach { result ->
+                    AppSecondaryText("${result.methodName}:", modifier = Modifier.padding(bottom = 0.5.cssRem))
                     AppText(
-                        "t = (x₀ - x₀*) / h",
-                        modifier = Modifier.padding(bottom = 0.1.cssRem)
+                        "Значение в x₀: ${formatNumber(result.value)}",
+                        color = viewModel.getCurrentColor(result.color, result.invertedColor),
+                        modifier = Modifier.padding(bottom = 0.5.cssRem)
                     )
                     AppText(
-                        "t = (${formatNumber(x0)} - ${formatNumber(points[0].x)}) / ${formatNumber(h)} = ${
-                            formatNumber(
-                                result.tValue
-                            )
-                        }",
+                        "Полином: ${result.polynomial}",
+                        color = viewModel.getCurrentColor(result.color, result.invertedColor),
                         modifier = Modifier.padding(bottom = 1.cssRem)
                     )
                 }
-            }
-
-            if (result != null) {
-                // Метод Лагранжа
-                AppSecondaryText("Метод Лагранжа:", modifier = Modifier.padding(bottom = 0.5.cssRem))
-                AppText(
-                    "Значение в x₀: ${formatNumber(result.lagrangeValue)}",
-                    color = AppColors.Error,
-                    modifier = Modifier.padding(bottom = 1.cssRem)
-                )
-
-                // Метод Ньютона
-                AppSecondaryText("Метод Ньютона:", modifier = Modifier.padding(bottom = 0.5.cssRem))
-                AppText(
-                    "Значение в x₀: ${formatNumber(result.newtonValue)}",
-                    color = AppColors.Success,
-                    modifier = Modifier.padding(bottom = 0.5.cssRem)
-                )
             }
         }
     }

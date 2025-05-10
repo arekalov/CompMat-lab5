@@ -1,8 +1,13 @@
 package com.arekalov.compmatlab5.models
 
+import com.varabyte.kobweb.compose.ui.graphics.Color
+
 data class InterpolationResult(
-    val lagrangeValue: Double, // результат интерполяции методом Лагранжа
-    val newtonValue: Double, // результат интерполяции методом Ньютона
-    val tValue: Double, // значение t для обоих методов
-    val error: String? = null // ошибка (если есть)
+    val methodName: String,
+    val value: Double,
+    val polynomial: String,
+    val colorString: String,
+    val invertedColorString: String,
+    val color: Color,
+    val invertedColor: Color,
 ) 
