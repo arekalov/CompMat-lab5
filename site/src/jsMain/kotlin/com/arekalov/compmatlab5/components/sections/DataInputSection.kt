@@ -33,6 +33,7 @@ fun DataInputSection(
     var nPoints by remember { mutableStateOf("8") }
 
     val inputType = viewModel.inputType.collectAsState().value
+    val functionType = viewModel.functionType.collectAsState().value
 
     BorderBox(
         modifier = modifier,
@@ -54,6 +55,7 @@ fun DataInputSection(
             ) {
                 InputType.values().forEach { type ->
                     AppButton(
+                        isEnabled = inputType != type,
                         onClick = { viewModel.setInputType(type) },
                         modifier = Modifier.padding(right = 0.5.cssRem)
                     ) {
@@ -136,6 +138,25 @@ fun DataInputSection(
                                 }
                             }
                     )
+
+                    // Отображение загруженных точек
+                    val points = viewModel.points.collectAsState().value
+                    if (points.isNotEmpty()) {
+                        AppSecondaryText(
+                            "Загруженные точки:",
+                            modifier = Modifier.padding(top = 1.cssRem, bottom = 0.5.cssRem)
+                        )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(10.cssRem)
+                                .padding(0.5.cssRem)
+                        ) {
+                            points.forEach { point ->
+                                AppText("x = ${point.x}, y = ${point.y}")
+                            }
+                        }
+                    }
                 }
 
                 InputType.FUNCTION -> {
@@ -143,13 +164,19 @@ fun DataInputSection(
                         "Выберите функцию и параметры",
                         modifier = Modifier.padding(bottom = 0.5.cssRem)
                     )
-                    Row(modifier = Modifier.padding(bottom = 0.5.cssRem)) {
+                    Row(
+                        modifier = Modifier.padding(bottom = 0.5.cssRem),
+                        horizontalArrangement = Arrangement.spacedBy(1.cssRem)
+                    ) {
                         FunctionType.values().forEach { type ->
                             AppButton(
+                                isEnabled = functionType != type,
                                 onClick = { viewModel.setFunctionType(type) },
                                 modifier = Modifier.padding(right = 0.5.cssRem)
                             ) {
-                                AppText(type.name, fontSize = 1.0)
+                                AppText(
+                                    type.name
+                                )
                             }
                         }
                     }

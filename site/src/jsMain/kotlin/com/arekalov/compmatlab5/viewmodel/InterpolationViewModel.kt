@@ -56,7 +56,6 @@ class InterpolationViewModel {
             FunctionType.SIN -> { x: Double -> sin(x) }
             FunctionType.COS -> { x: Double -> cos(x) }
             FunctionType.EXP -> { x: Double -> exp(x) }
-            FunctionType.CUSTOM -> { x: Double -> x } // Можно заменить на пользовательскую функцию
         }
         val step = if (n > 1) (b - a) / (n - 1) else 0.0
         val points = List(n) { i ->
