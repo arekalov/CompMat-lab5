@@ -30,6 +30,6 @@
 3. Для выхода нажать `Q`
 
 ## Демо
-![preview_1.png](docs/imgs/preview_1.png)
-![preview_2.png](docs/imgs/preview_2.png)
-![preview_3.png](docs/imgs/preview_3.png)
+![1.png](docs/previews/1.png)
+![2.png](docs/previews/2.png)
+![3.png](docs/previews/3.png)
