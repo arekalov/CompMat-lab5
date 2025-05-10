@@ -103,7 +103,7 @@ class InterpolationViewModel {
             // Отображаем многочлены на графике
             val lagrangePolynomial = InterpolationLogicController.getLagrangePolynomial(points)
             val newtonPolynomial = InterpolationLogicController.getNewtonPolynomial(points)
-
+            
             // Многочлен Лагранжа красным цветом
             graphManager.plotFunction(
                 lagrangePolynomial, if (isDarkTheme) {
@@ -113,6 +113,23 @@ class InterpolationViewModel {
             // Многочлен Ньютона зеленым цветом
             graphManager.plotFunction(
                 newtonPolynomial, if (isDarkTheme) {
+                    "#${AppColors.successSInversedtSring}"
+                } else "#${AppColors.successString}", false
+            )
+
+            // Отображаем точку x₀ и значения y
+            val lagrangePoint = "(${x0}, ${lagrangeValue})"
+            val newtonPoint = "(${x0}, ${newtonValue})"
+            
+            // Точка для метода Лагранжа
+            graphManager.plotFunction(
+                lagrangePoint, if (isDarkTheme) {
+                    "#${AppColors.errorIversedString}"
+                } else "#${AppColors.errorString}", false
+            )
+            // Точка для метода Ньютона
+            graphManager.plotFunction(
+                newtonPoint, if (isDarkTheme) {
                     "#${AppColors.successSInversedtSring}"
                 } else "#${AppColors.successString}", false
             )
