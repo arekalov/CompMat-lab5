@@ -8,11 +8,13 @@ import com.varabyte.kobweb.compose.foundation.layout.Arrangement
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.foundation.layout.Row
+import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.height
 import com.varabyte.kobweb.compose.ui.modifiers.padding
 import com.varabyte.kobweb.compose.ui.modifiers.width
 import com.varabyte.kobweb.compose.ui.toAttrs
+import com.varabyte.kobweb.core.App
 import org.jetbrains.compose.web.attributes.accept
 import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.dom.TextArea
@@ -33,20 +35,29 @@ fun DataInputSection(
     val inputType = viewModel.inputType.collectAsState().value
 
     BorderBox(
-        modifier = modifier
+        modifier = modifier,
+        contentAlignment = Alignment.TopStart
     ) {
         Column(
             verticalArrangement = Arrangement.Top,
         ) {
-            AppLabel("Ввод данных", modifier = Modifier.padding(bottom = 1.cssRem))
+            AppLabel(
+                "Ввод данных",
+                modifier = Modifier.padding(bottom = 1.cssRem),
+                fontSize = 1.5,
+                color = AppColors.Primary
+            )
 
-            Row(modifier = Modifier.padding(bottom = 1.cssRem)) {
+            Row(
+                modifier = Modifier.padding(bottom = 1.cssRem),
+                horizontalArrangement = Arrangement.spacedBy(0.5.cssRem)
+            ) {
                 InputType.values().forEach { type ->
                     AppButton(
                         onClick = { viewModel.setInputType(type) },
                         modifier = Modifier.padding(right = 0.5.cssRem)
                     ) {
-                        AppText(type.name, fontSize = 1.0)
+                        AppLabel(type.name, fontSize = 1.0, color = AppColors.Primary)
                     }
                 }
             }

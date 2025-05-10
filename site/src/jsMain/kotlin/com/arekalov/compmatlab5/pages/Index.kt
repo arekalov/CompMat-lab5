@@ -37,7 +37,7 @@ fun Index() {
             ) {
                 DataInputSection(
                     modifier = Modifier
-                        .width(30.cssRem)
+                        .width(25.cssRem)
                         .height(40.cssRem),
                     viewModel = viewModel
                 )
