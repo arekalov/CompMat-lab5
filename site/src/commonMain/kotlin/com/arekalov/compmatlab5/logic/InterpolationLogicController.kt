@@ -36,25 +36,32 @@ object InterpolationLogicController {
 
     fun isValidForFiniteDifferences(points: List<DataPoint>): Boolean {
         if (points.size < 2) return false
-        
-        val h = points[1].x - points[0].x
-        for (i in 1 until points.size - 1) {
-            val newH = points[i + 1].x - points[i].x
-            if (abs(newH - h) > 1e-10) return false
+        val step = points[1].x - points[0].x
+        val isValid = points.zipWithNext().all { (p1, p2) ->
+            abs(p2.x - p1.x - step) < 1e-10
         }
-        return true
+        println("Newton validation: $isValid (step: $step)")
+        return isValid
     }
 
     fun isValidForGaussOrStirling(points: List<DataPoint>): Boolean {
-        if (points.size < 3) return false
-        if (!isValidForFiniteDifferences(points)) return false
-        return points.size % 2 == 1
+        if (points.size < 3 || points.size % 2 == 0) return false
+        val step = points[1].x - points[0].x
+        val isValid = points.zipWithNext().all { (p1, p2) ->
+            abs(p2.x - p1.x - step) < 1e-10
+        }
+        println("Gauss/Stirling validation: $isValid (step: $step, size: ${points.size})")
+        return isValid
     }
 
     fun isValidForBessel(points: List<DataPoint>): Boolean {
-        if (points.size < 4) return false
-        if (!isValidForFiniteDifferences(points)) return false
-        return points.size % 2 == 0
+        if (points.size < 4 || points.size % 2 != 0) return false
+        val step = points[1].x - points[0].x
+        val isValid = points.zipWithNext().all { (p1, p2) ->
+            abs(p2.x - p1.x - step) < 1e-10
+        }
+        println("Bessel validation: $isValid (step: $step, size: ${points.size})")
+        return isValid
     }
 
     fun setPoints(points: List<DataPoint>): FiniteDifferenceTable {
