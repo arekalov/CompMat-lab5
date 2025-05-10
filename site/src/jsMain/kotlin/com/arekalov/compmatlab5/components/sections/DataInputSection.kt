@@ -33,7 +33,6 @@ fun DataInputSection(
     var intervalB by remember { mutableStateOf("") }
     var nPoints by remember { mutableStateOf("8") }
 
-    val points = viewModel.points.collectAsState().value
     val inputType = viewModel.inputType.collectAsState().value
     val functionType = viewModel.functionType.collectAsState().value
 

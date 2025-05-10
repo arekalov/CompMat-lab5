@@ -69,6 +69,8 @@ class InterpolationViewModel {
     fun setPoints(newPoints: List<DataPoint>) {
         _points.value = newPoints
         recalculateTable()
+        graphManager.clearGraph()
+        graphManager.plotPoints(newPoints)
     }
 
     fun setX0(newX0: Double?) {
@@ -96,6 +98,10 @@ class InterpolationViewModel {
                 tValue = tValue
             )
             _error.value = null
+
+            // Отображаем многочлен Лагранжа на графике
+            val lagrangePolynomial = InterpolationLogicController.getLagrangePolynomial(points)
+            graphManager.plotFunction(lagrangePolynomial, "#FF0000", false)
         } catch (e: Exception) {
             _error.value = "Ошибка вычисления: ${e.message}"
         }
@@ -105,7 +111,7 @@ class InterpolationViewModel {
         _points.value = emptyList()
         _result.value = null
         _finiteDifferenceTable.value = null
-
+        graphManager.clearGraph()
     }
 
     private fun recalculateTable() {
