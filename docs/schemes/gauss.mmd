@@ -1,0 +1,13 @@
+graph TD
+    A(("Начало"))
+    B[/"points: List<DataPoint>, x0: Double"/]
+    C["val n = points.size - 1\nval alphaInd = n / 2\nval h = points[1].x - points[0].x\nval t = (x0 - points[alphaInd].x) / h"/]
+    D{"x0 > points[alphaInd].x?"}
+    E["result = calculateF1(points, finDifs, alphaInd, h, dts1, t)"]
+    F["result = calculateF2(points, finDifs, alphaInd, h, dts1, t)"]
+    I[Pair &lt;Double, String&gt; ]
+    J(("Конец"))
+
+    A --> B --> C --> D
+    D -- Да --> E --> I --> J
+    D -- Нет --> F --> I

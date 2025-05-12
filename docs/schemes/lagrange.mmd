@@ -1,0 +1,20 @@
+graph TD
+    A(("Начало"))
+    B[/"points: List<DataPoint>, x0: Double"/]
+    C["val n = points.size\nvar result = 0.0"]
+    D{"for (i in 0 until n)"}
+    E["var term = points[i].y"]
+    F{"for (j in 0 until n)"}
+    G{"i != j?"}
+    H["term *= (x0 - points[j].x) / (points[i].x - points[j].x)"]
+    I["result += term"]
+    J["Pair &lt;Double, String&gt; "]
+    K(("Конец"))
+
+    A --> B --> C --> D
+    D -- Да --> E --> F
+    F -- Да --> G
+    G -- Да --> H --> F
+    G -- Нет --> F
+    F -- Нет --> I --> D
+    D -- Нет --> J --> K 

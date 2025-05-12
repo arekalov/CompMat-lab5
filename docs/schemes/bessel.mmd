@@ -1,0 +1,18 @@
+graph TD
+    A(("Начало"))
+    B[/"points: List<DataPoint>, x0: Double"/]
+    C["val n = points.size - 1\nval alphaInd = n / 2\nval finDifs = ... (см. код)\nval h = points[1].x - points[0].x\nval t = (x0 - points[alphaInd].x) / h\nvar result = (points[alphaInd].y + points[alphaInd + 1].y) / 2"/]
+    D{"for (k in 1..n)"}
+    E["mult1 = ... (см. код)\nmult2 = ... (см. код)"]
+    F["if (k < finDifs.size && finDifs[k].size > finDifs[k].size / 2)"]
+    G["result += mult1 * finDifs[k][...] / ... + (t - 0.5) * mult2 * finDifs[k][...] / ..."]
+    H{"Следующий k?"}
+    I[Pair &lt;Double, String&gt; ]
+    J(("Конец"))
+
+    A --> B --> C --> D
+    D -- Да --> E --> F
+    F -- Да --> G --> H
+    F -- Нет --> H
+    H -- Да --> D
+    H -- Нет --> I --> J 

@@ -1,0 +1,20 @@
+graph TD
+    A(("Начало"))
+    B[/"points: List<DataPoint>, x0: Double"/]
+    C["val n = points.size - 1\nval alphaInd = n / 2"]
+    D["val finDifs = mutableListOf<List<Double>>()\nfinDifs.add(points.map { it.y })"]
+    E{"for (k in 1..n)"}
+    F["val last = finDifs.last()"]
+    G["finDifs.add((0 until n - k + 1).map { i -> last[i + 1] - last[i] })"]
+    H{"Следующий k?"}
+    I["val h = points[1].x - points[0].x\nval dts1 = listOf(0, -1, 1, -2, 2, -3, 3, -4, 4)\nval t = (x0 - points[alphaInd].x) / h"]
+    J["val f1 = calculateF1(points, finDifs, alphaInd, h, dts1, t)"]
+    K["val f2 = calculateF2(points, finDifs, alphaInd, h, dts1, t)"]
+    L["val result = (f1 + f2) / 2"]
+    M[Pair &lt;Double, String&gt; ]
+    N(("Конец"))
+
+    A --> B --> C --> D --> E
+    E -- Да --> F --> G --> H
+    H -- Да --> E
+    H -- Нет --> I --> J --> K --> L --> M --> N 
