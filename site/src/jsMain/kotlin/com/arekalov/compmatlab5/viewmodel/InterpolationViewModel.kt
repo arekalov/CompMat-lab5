@@ -7,6 +7,7 @@ import com.arekalov.compmatlab5.components.widgets.AppColors
 import com.arekalov.compmatlab5.data.GraphManager
 import com.arekalov.compmatlab5.logic.*
 import com.arekalov.compmatlab5.models.*
+import com.arekalov.compmatlab5.theme.getColor
 import com.arekalov.compmatlab5.theme.getColorString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -148,17 +149,22 @@ class InterpolationViewModel {
 
             // Отображаем все полиномы на графике
             results.forEach { result ->
+                val color = result.method.getColorString(isDarkTheme)
                 graphManager.plotPoints(
                     id = result.method.name,
                     points = result.points,
                     isLinesEnabled = true,
-                    colorValue = result.method.getColorString(isDarkTheme),
+                    colorValue = color,
+                    labelText = result.method.name,
+                    isHidden = result.method != InterpolationMethod.LagrangeInterpolation,
                 )
                 graphManager.plotPoints(
                     id = result.method.name + "value",
                     points = listOf(DataPoint(x0, result.value)),
                     colorValue = result.method.getColorString(isDarkTheme),
-                    isLinesEnabled = false
+                    labelText = result.method.name + " point",
+                    isLinesEnabled = false,
+                    isHidden = result.method != InterpolationMethod.LagrangeInterpolation,
                 )
             }
 

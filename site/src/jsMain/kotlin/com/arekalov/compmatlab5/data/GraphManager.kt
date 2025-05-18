@@ -4,7 +4,8 @@ import com.arekalov.compmatlab5.models.DataPoint
 import kotlinx.browser.document
 import org.w3c.dom.HTMLScriptElement
 
-private const val DESMOS_API_URI = "https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
+private const val DESMOS_API_URI =
+    "https://www.desmos.com/api/v1.10/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"
 private const val CALCULATOR_DIV_ID = "calculator"
 
 private var calculator: dynamic = null
@@ -37,19 +38,32 @@ actual class GraphManager {
         calculator?.setBlank()
     }
 
-    actual fun plotPoints(id: String, points: List<DataPoint>, colorValue: String, isLinesEnabled: Boolean) {
+    actual fun plotPoints(
+        id: String,
+        points: List<DataPoint>,
+        colorValue: String,
+        isLinesEnabled: Boolean,
+        isHidden: Boolean,
+        labelText: String,
+    ) {
         val pointsStr = points.joinToString(",") { "(${it.x},${it.y})" }
         val size = if (isLinesEnabled) 0 else 9
-        calculator?.setExpression(js("""
+        calculator?.setExpression(
+            js(
+                """
             {
                 id: id,
                 latex: pointsStr,
                 style: "points",
                 color: colorValue,
                 lines: isLinesEnabled,
-                pointSize: size
+                pointSize: size,
+                hidden: isHidden,
+                label: labelText
             }
-        """))
+        """
+            )
+        )
     }
 
     actual fun setTheme(isDark: Boolean) {

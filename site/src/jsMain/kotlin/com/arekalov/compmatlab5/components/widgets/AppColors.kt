@@ -16,14 +16,15 @@ object AppColors {
 
     // Строковые представления цветов для использования в Desmos
     val primaryString = "#976D2"
-    val primaryInversedString = "E6892D"
-    val secondaryString = "6B7280"
-    val secondaryInversedString = "94AD7F"
-    val successString = "4CAF50"
-    val successInversedString = "B350AF"
-    val errorString = "F44336"
-    val errorInversedString = "0BBCF9"
-    val warningString = "FF9800"
-    val warningInversedString = "0067FF"
+    val primaryInversedString = "#e6892d"
+    val secondaryString = "#6b7280"
+    val secondaryInversedString = "#94ad7f"
+    val successString = "#4caf50"
+    val successInversedString = "#b350af"
+    val errorString = "#f44336"
+    val errorInversedString = "#0bbcf9"
+    val warningString = "#ff9800"
+    val warningInversedString = "#0067ff"
+
 }
 

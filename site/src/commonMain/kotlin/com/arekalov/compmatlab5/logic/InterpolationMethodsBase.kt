@@ -4,6 +4,10 @@ import com.arekalov.compmatlab5.models.DataPoint
 import com.arekalov.compmatlab5.models.FiniteDifferenceTable
 import com.arekalov.compmatlab5.models.InterpolationMethod
 import com.arekalov.compmatlab5.models.InterpolationResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
+import org.jetbrains.compose.web.attributes.Scope
 
 object InterpolationMethodsBase {
     internal fun factorial(n: Int): Int {
@@ -73,11 +77,11 @@ object InterpolationMethodsBase {
             x += dx
         }
         points.forEach { result.add(it) }
-        result.add(DataPoint(x0, value))
+        result.add(DataPoint(x = x0, y = interpolate(points, x0, method)))
         result.add(DataPoint(x = b, y = interpolate(points, b, method)))
 
         return InterpolationResult(
-            points = points.sortedBy { it.x },
+            points = result.sortedBy { it.x },
             value = value,
             method = method,
         )
