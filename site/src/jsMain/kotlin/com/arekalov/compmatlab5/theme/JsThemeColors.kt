@@ -1,38 +1,28 @@
 package com.arekalov.compmatlab5.theme
 
 import com.arekalov.compmatlab5.components.widgets.AppColors
+import com.arekalov.compmatlab5.models.InterpolationMethod
 import com.varabyte.kobweb.compose.ui.graphics.Color
 
-object JsThemeColors : ThemeColors {
-    override val errorString: String = AppColors.errorString
-    override val errorIversedString: String = AppColors.errorInversedString
-    override val successString: String = AppColors.successString
-    override val successSInversedtSring: String = AppColors.successInversedString
-    override val primaryString: String = AppColors.primaryString
-    override val primaryInversedString: String = AppColors.primaryInversedString
-    override val secondaryString: String = AppColors.secondaryString
-    override val secondaryInversedString: String = AppColors.secondaryInversedString
-    override val warningString: String = AppColors.warningString
-    override val warningInversedString: String = AppColors.warningInversedString
 
-    override val errorColor: Color
-        get() = AppColors.Error
-    override val errorInversedColor: Color
-        get() = AppColors.ErrorInversed
-    override val successColor: Color
-        get() = AppColors.Success
-    override val successInversedColor: Color
-        get() = AppColors.SuccessInversed
-    override val primaryColor: Color
-        get() = AppColors.Primary
-    override val primaryInversedColor: Color
-        get() = AppColors.PrimaryInversed
-    override val secondaryColor: Color
-        get() = AppColors.Secondary
-    override val secondaryInversedColor: Color
-        get() = AppColors.SecondaryInversed
-    override val warningColor: Color
-        get() = AppColors.Warning
-    override val warningInversedColor: Color
-        get() = AppColors.WarningInversed
-} 
+fun InterpolationMethod.getColorString(isDark: Boolean): String {
+    return when (this) {
+        InterpolationMethod.LagrangeInterpolation -> if (isDark) AppColors.primaryInversedString else AppColors.primaryString
+        InterpolationMethod.NewtonFiniteDifferenceInterpolation -> if (isDark) AppColors.successInversedString else AppColors.successString
+        InterpolationMethod.NewtonDividedDifferenceInterpolation -> if (isDark) AppColors.successInversedString else AppColors.successString
+        InterpolationMethod.GaussInterpolation -> if (isDark) AppColors.secondaryInversedString else AppColors.secondaryString
+        InterpolationMethod.BesselInterpolation -> if (isDark) AppColors.errorInversedString else AppColors.errorString
+        InterpolationMethod.StirlingInterpolation -> if (isDark) AppColors.warningInversedString else AppColors.warningString
+    }
+}
+
+fun InterpolationMethod.getColor(isDark: Boolean): Color {
+    return when (this) {
+        InterpolationMethod.LagrangeInterpolation -> if (isDark) AppColors.Primary else AppColors.PrimaryInversed
+        InterpolationMethod.NewtonFiniteDifferenceInterpolation -> if (isDark) AppColors.Success else AppColors.SuccessInversed
+        InterpolationMethod.NewtonDividedDifferenceInterpolation -> if (isDark) AppColors.Success else AppColors.SuccessInversed
+        InterpolationMethod.GaussInterpolation -> if (isDark) AppColors.Secondary else AppColors.SecondaryInversed
+        InterpolationMethod.BesselInterpolation -> if (isDark) AppColors.Error else AppColors.ErrorInversed
+        InterpolationMethod.StirlingInterpolation -> if (isDark) AppColors.Warning else AppColors.WarningInversed
+    }
+}

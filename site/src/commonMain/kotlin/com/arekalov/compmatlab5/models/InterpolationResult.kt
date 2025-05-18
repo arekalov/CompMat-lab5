@@ -1,9 +1,7 @@
 package com.arekalov.compmatlab5.models
 
-import com.varabyte.kobweb.compose.ui.graphics.Color
-
 data class InterpolationResult(
-    val methodName: String,
+    val method: InterpolationMethod,
     val value: Double,
     val points: List<DataPoint>,
 ) 

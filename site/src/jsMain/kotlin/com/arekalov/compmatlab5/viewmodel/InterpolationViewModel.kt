@@ -7,7 +7,7 @@ import com.arekalov.compmatlab5.components.widgets.AppColors
 import com.arekalov.compmatlab5.data.GraphManager
 import com.arekalov.compmatlab5.logic.*
 import com.arekalov.compmatlab5.models.*
-import com.arekalov.compmatlab5.theme.JsThemeColors
+import com.arekalov.compmatlab5.theme.getColorString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,12 +20,6 @@ class InterpolationViewModel {
 
     init {
         graphManager.initGraph()
-        // Инициализируем цвета для всех методов интерполяции
-        LagrangeInterpolation.init(JsThemeColors)
-        NewtonInterpolation.init(JsThemeColors)
-        GaussInterpolation.init(JsThemeColors)
-        StirlingInterpolation.init(JsThemeColors)
-        BesselInterpolation.init(JsThemeColors)
     }
 
     var isDarkTheme by mutableStateOf(true)
@@ -65,11 +59,11 @@ class InterpolationViewModel {
         _state.update { currentState ->
             currentState.copy(
                 points = points,
-                finiteDifferenceTable = InterpolationLogicController.buildFiniteDifferenceTable(points)
+                finiteDifferenceTable = InterpolationMethodsBase.buildFiniteDifferenceTable(points)
             )
         }
         graphManager.clearGraph()
-        graphManager.plotPoints(points)
+        graphManager.plotPoints(id = "predv", points)
     }
 
     fun updateX0(x0: Double) {
@@ -90,88 +84,93 @@ class InterpolationViewModel {
             val results = mutableListOf<InterpolationResult>()
 
             // Лагранж всегда доступен
-            val lagrangeResult = InterpolationLogicController.interpolate(points, x0, LagrangeInterpolation)
-            results.add(InterpolationResult(
-                methodName = "Многочлен Лагранжа",
-                value = lagrangeResult.first,
-                polynomial = lagrangeResult.second,
-                colorString = LagrangeInterpolation.colorString,
-                invertedColorString = LagrangeInterpolation.invertedColorString,
-                color = LagrangeInterpolation.color,
-                invertedColor = LagrangeInterpolation.colorInverted
-            ))
+            val lagrangeResult = InterpolationMethodsBase.getResult(
+                points = points,
+                x0 = x0,
+                method = InterpolationMethod.LagrangeInterpolation,
+                a = points.firstOrNull { it.x == points.minOf { it.x } }?.x ?: 0.0,
+                b = points.firstOrNull { it.x == points.maxOf { it.x } }?.x ?: 1.0,
+            )
+            results.add(lagrangeResult)
 
             // Ньютон с конечными разностями
-            if (InterpolationLogicController.isValidForFiniteDifferences(points)) {
-                val newtonResult = InterpolationLogicController.interpolate(points, x0, NewtonInterpolation)
-                results.add(InterpolationResult(
-                    methodName = "Многочлен Ньютона",
-                    value = newtonResult.first,
-                    polynomial = newtonResult.second,
-                    colorString = NewtonInterpolation.colorString,
-                    invertedColorString = NewtonInterpolation.invertedColorString,
-                    color = NewtonInterpolation.color,
-                    invertedColor = NewtonInterpolation.colorInverted
-                ))
-            }
+//            if (InterpolationLogicController.isValidForFiniteDifferences(points)) {
+//                val newtonResult = InterpolationLogicController.interpolate(points, x0, NewtonInterpolation)
+//                results.add(InterpolationResult(
+//                    methodName = "Многочлен Ньютона",
+//                    value = newtonResult.first,
+//                    polynomial = newtonResult.second,
+//                    colorString = NewtonInterpolation.colorString,
+//                    invertedColorString = NewtonInterpolation.invertedColorString,
+//                    color = NewtonInterpolation.color,
+//                    invertedColor = NewtonInterpolation.colorInverted
+//                ))
+//            }
+//
+//            // Гаусс
+//            if (InterpolationLogicController.isValidForGaussOrStirling(points)) {
+//                val gaussResult = InterpolationLogicController.interpolate(points, x0, GaussInterpolation)
+//                results.add(InterpolationResult(
+//                    methodName = "Многочлен Гаусса",
+//                    value = gaussResult.first,
+//                    polynomial = gaussResult.second,
+//                    colorString = GaussInterpolation.colorString,
+//                    invertedColorString = GaussInterpolation.invertedColorString,
+//                    color = GaussInterpolation.color,
+//                    invertedColor = GaussInterpolation.colorInverted
+//                ))
+//            }
+//
+//            // Стирлинг
+//            if (InterpolationLogicController.isValidForGaussOrStirling(points)) {
+//                val stirlingResult = InterpolationLogicController.interpolate(points, x0, StirlingInterpolation)
+//                results.add(InterpolationResult(
+//                    methodName = "Многочлен Стирлинга",
+//                    value = stirlingResult.first,
+//                    polynomial = stirlingResult.second,
+//                    colorString = StirlingInterpolation.colorString,
+//                    invertedColorString = StirlingInterpolation.invertedColorString,
+//                    color = StirlingInterpolation.color,
+//                    invertedColor = StirlingInterpolation.colorInverted
+//                ))
+//            }
+//
+//            // Бессель
+//            if (InterpolationLogicController.isValidForBessel(points)) {
+//                val besselResult = InterpolationLogicController.interpolate(points, x0, BesselInterpolation)
+//                results.add(InterpolationResult(
+//                    methodName = "Многочлен Бесселя",
+//                    value = besselResult.first,
+//                    polynomial = besselResult.second,
+//                    colorString = BesselInterpolation.colorString,
+//                    invertedColorString = BesselInterpolation.invertedColorString,
+//                    color = BesselInterpolation.color,
+//                    invertedColor = BesselInterpolation.colorInverted
+//                ))
+//            }
 
-            // Гаусс
-            if (InterpolationLogicController.isValidForGaussOrStirling(points)) {
-                val gaussResult = InterpolationLogicController.interpolate(points, x0, GaussInterpolation)
-                results.add(InterpolationResult(
-                    methodName = "Многочлен Гаусса",
-                    value = gaussResult.first,
-                    polynomial = gaussResult.second,
-                    colorString = GaussInterpolation.colorString,
-                    invertedColorString = GaussInterpolation.invertedColorString,
-                    color = GaussInterpolation.color,
-                    invertedColor = GaussInterpolation.colorInverted
-                ))
+            _state.update {
+                it.copy(
+                    interpolationResults = results,
+                    error = null
+                )
             }
-
-            // Стирлинг
-            if (InterpolationLogicController.isValidForGaussOrStirling(points)) {
-                val stirlingResult = InterpolationLogicController.interpolate(points, x0, StirlingInterpolation)
-                results.add(InterpolationResult(
-                    methodName = "Многочлен Стирлинга",
-                    value = stirlingResult.first,
-                    polynomial = stirlingResult.second,
-                    colorString = StirlingInterpolation.colorString,
-                    invertedColorString = StirlingInterpolation.invertedColorString,
-                    color = StirlingInterpolation.color,
-                    invertedColor = StirlingInterpolation.colorInverted
-                ))
-            }
-
-            // Бессель
-            if (InterpolationLogicController.isValidForBessel(points)) {
-                val besselResult = InterpolationLogicController.interpolate(points, x0, BesselInterpolation)
-                results.add(InterpolationResult(
-                    methodName = "Многочлен Бесселя",
-                    value = besselResult.first,
-                    polynomial = besselResult.second,
-                    colorString = BesselInterpolation.colorString,
-                    invertedColorString = BesselInterpolation.invertedColorString,
-                    color = BesselInterpolation.color,
-                    invertedColor = BesselInterpolation.colorInverted
-                ))
-            }
-
-            _state.update { it.copy(
-                interpolationResults = results,
-                error = null
-            ) }
 
             // Отображаем все полиномы на графике
             results.forEach { result ->
-                graphManager.plotFunction(result.polynomial, getCurrentStringColor(color = result.colorString, inverted = result.invertedColorString), false)
+                graphManager.plotPoints(
+                    id = result.method.name,
+                    points = result.points,
+                    isLinesEnabled = true,
+                    color = result.method.getColorString(isDarkTheme),
+                )
+                graphManager.plotPoints(
+                    id = result.method.name + "value",
+                    points = listOf(DataPoint(x0, result.value)),
+                    color = result.method.getColorString(isDarkTheme),
+                    isLinesEnabled = false
+                )
             }
-
-            // Отображаем точку x₀ и значения y для каждого метода
-//            results.forEach { result ->
-//                val point = "(${x0}, ${result.value})"
-//                graphManager.plotFunction(point, getCurrentStringColor(color = result.colorString, inverted = result.invertedColorString), false)
-//            }
 
         } catch (e: Exception) {
             _state.update { it.copy(error = "Ошибка вычисления: ${e.message}") }
@@ -187,11 +186,6 @@ class InterpolationViewModel {
         isDarkTheme = isDark
         graphManager.setTheme(isDark)
     }
-
-    fun getCurrentStringColor(color: String, inverted: String) = if (isDarkTheme) inverted else color
-    fun getCurrentColor(color: Color, inverted: Color) = if (!isDarkTheme) inverted else color
-
-
 }
 
 data class InterpolationState(

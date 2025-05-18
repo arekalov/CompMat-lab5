@@ -37,17 +37,21 @@ actual class GraphManager {
         calculator?.setBlank()
     }
 
-    actual fun plotPoints(points: List<DataPoint>) {
+    actual fun plotPoints(id: String, points: List<DataPoint>, color: String, isLinesEnabled: Boolean) {
         val pointsStr = points.joinToString(",") { "(${it.x},${it.y})" }
+        val size = if (isLinesEnabled) 0 else 9
         calculator?.setExpression(js("""
             {
-                id: "points",
+                id: id,
                 latex: pointsStr,
                 style: "points",
-                color: "#0C24A4"
+                color: color,
+                lines: isLinesEnabled,
+                pointSize: size
             }
         """))
     }
+
 
     actual fun plotFunction(expression: String, color: String, hidden: Boolean) {
         calculator?.setExpression(js("""

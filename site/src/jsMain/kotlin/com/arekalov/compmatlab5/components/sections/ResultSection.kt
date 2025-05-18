@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.arekalov.compmatlab5.common.formatNumber
 import com.arekalov.compmatlab5.components.widgets.*
-import com.arekalov.compmatlab5.models.InterpolationResult
 import com.arekalov.compmatlab5.viewmodel.InterpolationViewModel
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -14,7 +13,6 @@ import com.varabyte.kobweb.compose.foundation.layout.Row
 import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
-import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.cssRem
 
 @Composable
@@ -97,17 +95,16 @@ fun ResultSection(viewModel: InterpolationViewModel) {
 
             if (results.isNotEmpty()) {
                 results.forEach { result ->
-                    AppSecondaryText("${result.methodName}:", modifier = Modifier.padding(bottom = 0.5.cssRem))
+                    AppSecondaryText("${result.method}:", modifier = Modifier.padding(bottom = 0.5.cssRem))
                     AppText(
                         "Значение в x₀: ${formatNumber(result.value)}",
-                        color = viewModel.getCurrentColor(result.color, result.invertedColor),
                         modifier = Modifier.padding(bottom = 0.5.cssRem)
                     )
-                    AppText(
-                        "Полином: ${result.polynomial}",
-                        color = viewModel.getCurrentColor(result.color, result.invertedColor),
-                        modifier = Modifier.padding(bottom = 1.cssRem)
-                    )
+//                    AppText(
+//                        "Полином: ${result.polynomial}",
+//                        color = viewModel.getCurrentColor(result.color, result.invertedColor),
+//                        modifier = Modifier.padding(bottom = 1.cssRem)
+//                    )
                 }
             }
         }
