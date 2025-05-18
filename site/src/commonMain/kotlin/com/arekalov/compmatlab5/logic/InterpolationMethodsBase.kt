@@ -72,10 +72,12 @@ object InterpolationMethodsBase {
             result.add(DataPoint(x = x, y = interpolate(points, x, method)))
             x += dx
         }
+        points.forEach { result.add(it) }
+        result.add(DataPoint(x0, value))
         result.add(DataPoint(x = b, y = interpolate(points, b, method)))
 
         return InterpolationResult(
-            points = result,
+            points = points.sortedBy { it.x },
             value = value,
             method = method,
         )
