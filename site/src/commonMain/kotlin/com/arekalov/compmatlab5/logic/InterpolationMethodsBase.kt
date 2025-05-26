@@ -4,10 +4,6 @@ import com.arekalov.compmatlab5.models.DataPoint
 import com.arekalov.compmatlab5.models.FiniteDifferenceTable
 import com.arekalov.compmatlab5.models.InterpolationMethod
 import com.arekalov.compmatlab5.models.InterpolationResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
-import org.jetbrains.compose.web.attributes.Scope
 
 object InterpolationMethodsBase {
     internal fun factorial(n: Int): Int {
@@ -16,10 +12,6 @@ object InterpolationMethodsBase {
 
     internal fun getStep(points: List<DataPoint>): Double {
         return points[1].x - points[0].x
-    }
-
-    internal fun getMiddleIndex(points: List<DataPoint>): Int {
-        return points.size / 2
     }
 
     internal fun finiteDifferences(points: List<DataPoint>): List<List<Double>> {

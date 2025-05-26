@@ -21,6 +21,7 @@ import org.jetbrains.compose.web.css.cssRem
 import org.jetbrains.compose.web.dom.TextArea
 import org.jetbrains.compose.web.dom.Input
 import org.jetbrains.compose.web.dom.FileInput
+import com.arekalov.compmatlab5.common.StringResources
 
 @Composable
 fun DataInputSection(
@@ -44,7 +45,7 @@ fun DataInputSection(
             verticalArrangement = Arrangement.Top,
         ) {
             AppLabel(
-                "Ввод данных",
+                StringResources.DATA_INPUT_LABEL,
                 modifier = Modifier.padding(bottom = 1.cssRem),
                 fontSize = 1.5,
                 color = AppColors.Primary
@@ -75,7 +76,7 @@ fun DataInputSection(
             when (inputType) {
                 InputType.MANUAL -> {
                     AppSecondaryText(
-                        "Формат: x y (по одной паре на строку)",
+                        StringResources.MANUAL_FORMAT_HINT,
                         modifier = Modifier.padding(bottom = 0.5.cssRem)
                     )
                     TextArea(
@@ -107,13 +108,13 @@ fun DataInputSection(
                         },
                         modifier = Modifier.padding(top = 0.5.cssRem)
                     ) {
-                        AppText("Задать точки", fontSize = 1.0)
+                        AppText(StringResources.SET_POINTS_BUTTON, fontSize = 1.0)
                     }
                 }
 
                 InputType.FILE -> {
                     AppSecondaryText(
-                        "Выберите текстовый файл с точками в формате: x y (по одной паре на строку)",
+                        StringResources.FILE_FORMAT_HINT,
                         modifier = Modifier.padding(bottom = 0.5.cssRem)
                     )
                     FileInput(
@@ -150,7 +151,7 @@ fun DataInputSection(
 
                 InputType.FUNCTION -> {
                     AppSecondaryText(
-                        "Выберите функцию и параметры",
+                        StringResources.FUNCTION_HINT,
                         modifier = Modifier.padding(bottom = 0.5.cssRem)
                     )
                     Row(
@@ -175,26 +176,17 @@ fun DataInputSection(
                         }
                     }
                     Column(modifier = Modifier.padding(bottom = 0.5.cssRem)) {
-                        AppSecondaryText("Интервал [a, b]:", modifier = Modifier.padding(bottom = 0.25.cssRem))
-                        Row(
-                            modifier = Modifier.padding(bottom = 0.5.cssRem),
-                            horizontalArrangement = Arrangement.spacedBy(0.5.cssRem)
-                        ) {
-                            AppNumberField(
-                                value = intervalA,
-                                onValueChanged = { intervalA = it },
-                                modifier = Modifier.width(4.5.cssRem)
-                            )
-                            AppNumberField(
-                                value = intervalB,
-                                onValueChanged = { intervalB = it },
-                                modifier = Modifier.width(4.5.cssRem)
-                            )
-                        }
-                        AppSecondaryText("Количество точек:", modifier = Modifier.padding(bottom = 0.25.cssRem))
+                        AppSecondaryText(StringResources.INTERVAL_LABEL, modifier = Modifier.padding(bottom = 0.25.cssRem))
+                        AppSecondaryText(StringResources.INTERVAL_LABEL, modifier = Modifier.padding(bottom = 0.25.cssRem))
+                        AppSecondaryText(StringResources.NUM_POINTS_LABEL, modifier = Modifier.padding(bottom = 0.25.cssRem))
                         AppNumberField(
-                            value = nPoints,
-                            onValueChanged = { nPoints = it },
+                            value = intervalA,
+                            onValueChanged = { intervalA = it },
+                            modifier = Modifier.width(4.5.cssRem)
+                        )
+                        AppNumberField(
+                            value = intervalB,
+                            onValueChanged = { intervalB = it },
                             modifier = Modifier.width(4.5.cssRem)
                         )
                     }
@@ -206,13 +198,13 @@ fun DataInputSection(
                             viewModel.generatePointsByFunction(a, b, n)
                         }
                     ) {
-                        AppText("Сгенерировать точки", fontSize = 1.0)
+                        AppText(StringResources.GENERATE_POINTS_BUTTON, fontSize = 1.0)
                     }
                 }
             }
 
             AppSecondaryText(
-                "Значение x₀ для интерполяции:",
+                StringResources.X0_LABEL,
                 modifier = Modifier.padding(top = 1.cssRem, bottom = 0.5.cssRem)
             )
             AppNumberField(
@@ -230,7 +222,7 @@ fun DataInputSection(
                     .fillMaxWidth()
                     .padding(top = 1.cssRem)
             ) {
-                AppText("Вычислить", fontSize = 1.0)
+                AppText(StringResources.CALCULATE_BUTTON, fontSize = 1.0)
             }
         }
     }

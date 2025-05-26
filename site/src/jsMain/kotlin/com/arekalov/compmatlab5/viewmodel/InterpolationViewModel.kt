@@ -3,17 +3,19 @@ package com.arekalov.compmatlab5.viewmodel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.arekalov.compmatlab5.components.widgets.AppColors
 import com.arekalov.compmatlab5.data.GraphManager
-import com.arekalov.compmatlab5.logic.*
+import com.arekalov.compmatlab5.logic.InterpolationMethodsBase
 import com.arekalov.compmatlab5.models.*
-import com.arekalov.compmatlab5.theme.getColor
 import com.arekalov.compmatlab5.theme.getColorString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.exp
+import kotlin.math.sin
+import com.arekalov.compmatlab5.common.StringResources
 
 class InterpolationViewModel {
     private val graphManager = GraphManager()
@@ -95,15 +97,6 @@ class InterpolationViewModel {
             )
             results.add(lagrangeResult)
 
-//            val newtonResult = InterpolationMethodsBase.getResult(
-//                points = points,
-//                x0 = x0,
-//                method = InterpolationMethod.NewtonFiniteDifferenceInterpolation,
-//                a = a,
-//                b = b,
-//            )
-//            results.add(newtonResult)
-
             val newtonResult2 = InterpolationMethodsBase.getResult(
                 points = points,
                 x0 = x0,
@@ -133,7 +126,7 @@ class InterpolationViewModel {
                 graphManager.jsLog(gauss.points.joinToString("; "))
                 results.add(gauss)
             } else {
-                graphManager.jsLog("Точки не равноотстоящие или их меньше 3 для метода Гаусса")
+                graphManager.jsLog(StringResources.GAUSS_POINTS_NOT_EQUIDISTANT)
             }
 
             _state.update {

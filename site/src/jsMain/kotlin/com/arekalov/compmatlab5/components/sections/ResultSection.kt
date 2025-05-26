@@ -15,6 +15,7 @@ import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
 import com.varabyte.kobweb.compose.ui.modifiers.*
 import org.jetbrains.compose.web.css.cssRem
+import com.arekalov.compmatlab5.common.StringResources
 
 @Composable
 fun ResultSection(viewModel: InterpolationViewModel) {
@@ -34,19 +35,19 @@ fun ResultSection(viewModel: InterpolationViewModel) {
             modifier = Modifier.padding(1.cssRem)
         ) {
             AppLabel(
-                "Результаты",
+                StringResources.RESULTS_LABEL,
                 modifier = Modifier.padding(bottom = 1.cssRem),
                 color = AppColors.Primary,
                 fontSize = 1.5
             )
 
             if (error != null) {
-                AppText("Ошибка: $error", color = AppColors.Error, modifier = Modifier.padding(bottom = 1.cssRem))
+                AppText(StringResources.ERROR_PREFIX + error, color = AppColors.Error, modifier = Modifier.padding(bottom = 1.cssRem))
             }
 
             if (points.isNotEmpty()) {
                 AppSecondaryText(
-                    "Сгенерированные точки:",
+                    StringResources.GENERATED_POINTS_LABEL,
                     modifier = Modifier.padding(top = 0.5.cssRem, bottom = 0.5.cssRem)
                 )
                 Column(
@@ -61,7 +62,7 @@ fun ResultSection(viewModel: InterpolationViewModel) {
             }
 
             if (table != null) {
-                AppSecondaryText("Таблица конечных разностей:", modifier = Modifier.padding(bottom = 0.5.cssRem))
+                AppSecondaryText(StringResources.FINITE_DIFF_TABLE_LABEL, modifier = Modifier.padding(bottom = 0.5.cssRem))
                 val cellWidth = 6.cssRem
                 Box(
                     modifier = Modifier
@@ -72,7 +73,7 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                     Column {
                         Row {
                             AppSecondaryText(
-                                "x",
+                                StringResources.X_LABEL,
                                 modifier = Modifier.width(cellWidth).padding(top = 0.25.cssRem, bottom = 0.25.cssRem)
                                     .textAlignCenter()
                             )
@@ -87,7 +88,7 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                         table.differences.forEachIndexed { i, row ->
                             Row {
                                 AppSecondaryText(
-                                    "Δ$i",
+                                    StringResources.DELTA_LABEL_PREFIX + "$i",
                                     modifier = Modifier.width(cellWidth)
                                         .padding(top = 0.25.cssRem, bottom = 0.25.cssRem).textAlignCenter()
                                 )
@@ -108,7 +109,7 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                 results.forEach { result ->
                     AppSecondaryText("${result.method}:", modifier = Modifier.padding(bottom = 0.5.cssRem))
                     AppText(
-                        "Значение в x₀: ${formatNumber(result.value)}",
+                        StringResources.VALUE_AT_X0_LABEL + formatNumber(result.value),
                         color = result.method.getColor(isDark = viewModel.isDarkTheme),
                         modifier = Modifier.padding(bottom = 0.5.cssRem)
                     )
