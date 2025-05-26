@@ -114,8 +114,8 @@ class InterpolationViewModel {
                 abs((p2.x - p1.x) - step) < 1e-10
             }
 
-            // Метод Гаусса: только если точки равноотстоящие и их не меньше 3
-            if (isEquidistant && points.size >= 3) {
+            // Метод Гаусса: только если точки равноотстоящие, их не меньше 3 и не режим FUNCTION
+            if (isEquidistant && points.size >= 3 && inputType.value != InputType.FUNCTION) {
                 val gauss = InterpolationMethodsBase.getResult(
                     points = points,
                     x0 = x0,
@@ -125,6 +125,8 @@ class InterpolationViewModel {
                 )
                 graphManager.jsLog(gauss.points.joinToString("; "))
                 results.add(gauss)
+            } else if (inputType.value == InputType.FUNCTION) {
+                graphManager.jsLog("Метод Гаусса отключён для режима FUNCTION")
             } else {
                 graphManager.jsLog(StringResources.GAUSS_POINTS_NOT_EQUIDISTANT)
             }

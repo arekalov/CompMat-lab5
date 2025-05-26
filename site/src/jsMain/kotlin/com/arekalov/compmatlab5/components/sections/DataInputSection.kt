@@ -177,16 +177,25 @@ fun DataInputSection(
                     }
                     Column(modifier = Modifier.padding(bottom = 0.5.cssRem)) {
                         AppSecondaryText(StringResources.INTERVAL_LABEL, modifier = Modifier.padding(bottom = 0.25.cssRem))
-                        AppSecondaryText(StringResources.INTERVAL_LABEL, modifier = Modifier.padding(bottom = 0.25.cssRem))
+                        Row(
+                            modifier = Modifier.padding(bottom = 0.5.cssRem),
+                            horizontalArrangement = Arrangement.spacedBy(0.5.cssRem)
+                        ) {
+                            AppNumberField(
+                                value = intervalA,
+                                onValueChanged = { intervalA = it },
+                                modifier = Modifier.width(4.5.cssRem)
+                            )
+                            AppNumberField(
+                                value = intervalB,
+                                onValueChanged = { intervalB = it },
+                                modifier = Modifier.width(4.5.cssRem)
+                            )
+                        }
                         AppSecondaryText(StringResources.NUM_POINTS_LABEL, modifier = Modifier.padding(bottom = 0.25.cssRem))
                         AppNumberField(
-                            value = intervalA,
-                            onValueChanged = { intervalA = it },
-                            modifier = Modifier.width(4.5.cssRem)
-                        )
-                        AppNumberField(
-                            value = intervalB,
-                            onValueChanged = { intervalB = it },
+                            value = nPoints,
+                            onValueChanged = { nPoints = it },
                             modifier = Modifier.width(4.5.cssRem)
                         )
                     }
