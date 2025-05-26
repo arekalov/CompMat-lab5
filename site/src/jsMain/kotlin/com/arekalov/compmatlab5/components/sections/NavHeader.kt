@@ -70,7 +70,7 @@ fun NavHeader(
         }
 
         AppText(
-            text = "CompMat-lab2",
+            text = PAGE_TITLE,
             color = ColorMode.current.toSitePalette().brand.primary,
             fontSize = 1.5,
             modifier = Modifier.padding(leftRight = 1.cssRem)

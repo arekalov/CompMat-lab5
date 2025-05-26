@@ -10,10 +10,6 @@ object InterpolationMethodsBase {
         return if (n <= 1) 1 else n * factorial(n - 1)
     }
 
-    internal fun getStep(points: List<DataPoint>): Double {
-        return points[1].x - points[0].x
-    }
-
     internal fun finiteDifferences(points: List<DataPoint>): List<List<Double>> {
         val n = points.size
         val finDifs = mutableListOf<List<Double>>()
@@ -45,7 +41,6 @@ object InterpolationMethodsBase {
             InterpolationMethod.LagrangeInterpolation -> lagrangeInterpolate(points, x0)
             InterpolationMethod.NewtonDividedDifferenceInterpolation -> newtonDividedDifferenceInterpolate(points, x0)
             InterpolationMethod.GaussInterpolation -> gaussInterpolate(points, x0)
-            InterpolationMethod.NewtonFiniteDifferenceInterpolation -> newtonFiniteDifferenceInterpolate(points, x0)
         }
     }
 
