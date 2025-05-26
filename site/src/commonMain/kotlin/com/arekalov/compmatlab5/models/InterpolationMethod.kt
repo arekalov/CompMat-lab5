@@ -5,6 +5,4 @@ enum class InterpolationMethod {
     NewtonDividedDifferenceInterpolation,
     NewtonFiniteDifferenceInterpolation,
     GaussInterpolation,
-    StirlingInterpolation,
-    BesselInterpolation,
 }

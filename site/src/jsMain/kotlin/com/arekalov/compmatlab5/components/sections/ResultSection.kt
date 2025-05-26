@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import com.arekalov.compmatlab5.common.formatNumber
 import com.arekalov.compmatlab5.components.widgets.*
+import com.arekalov.compmatlab5.theme.getColor
 import com.arekalov.compmatlab5.viewmodel.InterpolationViewModel
 import com.varabyte.kobweb.compose.css.Overflow
 import com.varabyte.kobweb.compose.css.TextAlign
@@ -70,21 +71,31 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                 ) {
                     Column {
                         Row {
-                            AppSecondaryText("x", modifier = Modifier.width(cellWidth).padding(top = 0.25.cssRem, bottom = 0.25.cssRem).textAlignCenter())
+                            AppSecondaryText(
+                                "x",
+                                modifier = Modifier.width(cellWidth).padding(top = 0.25.cssRem, bottom = 0.25.cssRem)
+                                    .textAlignCenter()
+                            )
                             table.x.forEach { x ->
                                 AppSecondaryText(
                                     formatNumber(x, 4),
-                                    modifier = Modifier.width(cellWidth).padding(top = 0.25.cssRem, bottom = 0.25.cssRem).textAlignCenter()
+                                    modifier = Modifier.width(cellWidth)
+                                        .padding(top = 0.25.cssRem, bottom = 0.25.cssRem).textAlignCenter()
                                 )
                             }
                         }
                         table.differences.forEachIndexed { i, row ->
                             Row {
-                                AppSecondaryText("Δ$i", modifier = Modifier.width(cellWidth).padding(top = 0.25.cssRem, bottom = 0.25.cssRem).textAlignCenter())
+                                AppSecondaryText(
+                                    "Δ$i",
+                                    modifier = Modifier.width(cellWidth)
+                                        .padding(top = 0.25.cssRem, bottom = 0.25.cssRem).textAlignCenter()
+                                )
                                 row.forEach { diff ->
                                     AppText(
                                         formatNumber(diff, 4),
-                                        modifier = Modifier.width(cellWidth).padding(top = 0.25.cssRem, bottom = 0.25.cssRem).textAlignCenter()
+                                        modifier = Modifier.width(cellWidth)
+                                            .padding(top = 0.25.cssRem, bottom = 0.25.cssRem).textAlignCenter()
                                     )
                                 }
                             }
@@ -98,13 +109,9 @@ fun ResultSection(viewModel: InterpolationViewModel) {
                     AppSecondaryText("${result.method}:", modifier = Modifier.padding(bottom = 0.5.cssRem))
                     AppText(
                         "Значение в x₀: ${formatNumber(result.value)}",
+                        color = result.method.getColor(isDark = viewModel.isDarkTheme),
                         modifier = Modifier.padding(bottom = 0.5.cssRem)
                     )
-//                    AppText(
-//                        "Полином: ${result.polynomial}",
-//                        color = viewModel.getCurrentColor(result.color, result.invertedColor),
-//                        modifier = Modifier.padding(bottom = 1.cssRem)
-//                    )
                 }
             }
         }

@@ -113,32 +113,28 @@ class InterpolationViewModel {
             )
             results.add(newtonResult2)
 
-            val gauss = InterpolationMethodsBase.getResult(
-                points = points,
-                x0 = x0,
-                method = InterpolationMethod.GaussInterpolation,
-                a = a,
-                b = b,
-            )
-            results.add(gauss)
 
-//            val stirling = InterpolationMethodsBase.getResult(
-//                points = points,
-//                x0 = x0,
-//                method = InterpolationMethod.StirlingInterpolation,
-//                a = a,
-//                b = b,
-//            )
-//            results.add(stirling)
+            // Метод Гаусса: только если точки равноотстоящие и их не меньше 3
+           // Проверка на равноотстоящие точки
+            val step = points[1].x - points[0].x
+            val isEquidistant = points.zipWithNext().all { (p1, p2) ->
+                abs((p2.x - p1.x) - step) < 1e-10
+            }
 
-//            val bessel = InterpolationMethodsBase.getResult(
-//                points = points,
-//                x0 = x0,
-//                method = InterpolationMethod.BesselInterpolation,
-//                a = a,
-//                b = b,
-//            )
-//            results.add(bessel)
+            // Метод Гаусса: только если точки равноотстоящие и их не меньше 3
+            if (isEquidistant && points.size >= 3) {
+                val gauss = InterpolationMethodsBase.getResult(
+                    points = points,
+                    x0 = x0,
+                    method = InterpolationMethod.GaussInterpolation,
+                    a = a,
+                    b = b,
+                )
+                graphManager.jsLog(gauss.points.joinToString("; "))
+                results.add(gauss)
+            } else {
+                graphManager.jsLog("Точки не равноотстоящие или их меньше 3 для метода Гаусса")
+            }
 
             _state.update {
                 it.copy(

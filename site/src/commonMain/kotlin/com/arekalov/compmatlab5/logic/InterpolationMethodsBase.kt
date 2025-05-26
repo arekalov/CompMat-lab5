@@ -23,17 +23,15 @@ object InterpolationMethodsBase {
     }
 
     internal fun finiteDifferences(points: List<DataPoint>): List<List<Double>> {
-        val n = points.size - 1
+        val n = points.size
         val finDifs = mutableListOf<List<Double>>()
         finDifs.add(points.map { it.y })
-
-        for (k in 1..n) {
+        for (k in 1 until n) {
             val last = finDifs.last()
-            finDifs.add((0 until n - k + 1).map { i ->
+            finDifs.add((0 until n - k).map { i ->
                 last[i + 1] - last[i]
             })
         }
-
         return finDifs
     }
 
@@ -56,8 +54,6 @@ object InterpolationMethodsBase {
             InterpolationMethod.NewtonDividedDifferenceInterpolation -> newtonDividedDifferenceInterpolate(points, x0)
             InterpolationMethod.GaussInterpolation -> gaussInterpolate(points, x0)
             InterpolationMethod.NewtonFiniteDifferenceInterpolation -> newtonFiniteDifferenceInterpolate(points, x0)
-            InterpolationMethod.StirlingInterpolation -> stirlingInterpolate(points, x0)
-            InterpolationMethod.BesselInterpolation -> besselInterpolate(points, x0)
         }
     }
 

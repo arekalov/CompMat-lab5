@@ -11,8 +11,6 @@ fun InterpolationMethod.getColorString(isDark: Boolean): String {
         InterpolationMethod.NewtonFiniteDifferenceInterpolation -> if (isDark) AppColors.successInversedString else AppColors.successString
         InterpolationMethod.NewtonDividedDifferenceInterpolation -> if (isDark) AppColors.successInversedString else AppColors.successString
         InterpolationMethod.GaussInterpolation -> if (isDark) AppColors.secondaryInversedString else AppColors.secondaryString
-        InterpolationMethod.BesselInterpolation -> if (isDark) AppColors.errorInversedString else AppColors.errorString
-        InterpolationMethod.StirlingInterpolation -> if (isDark) AppColors.warningInversedString else AppColors.warningString
     }
 }
 
@@ -22,7 +20,5 @@ fun InterpolationMethod.getColor(isDark: Boolean): Color {
         InterpolationMethod.NewtonFiniteDifferenceInterpolation -> if (isDark) AppColors.Success else AppColors.SuccessInversed
         InterpolationMethod.NewtonDividedDifferenceInterpolation -> if (isDark) AppColors.Success else AppColors.SuccessInversed
         InterpolationMethod.GaussInterpolation -> if (isDark) AppColors.Secondary else AppColors.SecondaryInversed
-        InterpolationMethod.BesselInterpolation -> if (isDark) AppColors.Error else AppColors.ErrorInversed
-        InterpolationMethod.StirlingInterpolation -> if (isDark) AppColors.Warning else AppColors.WarningInversed
     }
 }
