@@ -1,13 +1,35 @@
 graph TD
     A(("Начало"))
-    B[/"points: List<DataPoint>, x0: Double"/]
-    C["val n = points.size - 1\nval alphaInd = n / 2\nval h = points[1].x - points[0].x\nval t = (x0 - points[alphaInd].x) / h"/]
-    D{"x0 > points[alphaInd].x?"}
-    E["result = calculateF1(points, finDifs, alphaInd, h, dts1, t)"]
-    F["result = calculateF2(points, finDifs, alphaInd, h, dts1, t)"]
-    I[Pair &lt;Double, String&gt; ]
-    J(("Конец"))
+    B[/"Ввод: points, x0"/]
+    C["n = points.size, alphaInd = n/2"]
+    D["finDifs = finiteDifferences(points)"]
+    E["h = points[1].x - points[0].x"]
+    F["yAlpha = points[alphaInd].y"]
+    G["sum = 0"]
+    H{{"1 <= k < n"}}
+    I["size = finDifs[k].size"]
+    DIR{"x0 > points[alphaInd].x"}
+    J1["centerIndex = size / 2"]
+    J2["centerIndex = size / 2 - (1 - size % 2)"]
+    K["safeIndex = centerIndex.coerceIn(0, size-1)"]
+    L1["term = 1"]
+    L2{{"0 <= j < k"}}
+    L3a["term *= (x0 - points[alphaInd].x) / h + dts1[j]"]
+    L3b["term *= (x0 - points[alphaInd].x) / h - dts1[j]"]
+    M["coeff = finDifs[k][safeIndex]"]
+    N["sum += (term * coeff) / factorial(k)"]
+    O{{"0 <= acc < k"}}
+    P["result = yAlpha + sum"]
+    Q[/"Возврат result"/]
+    R(("Конец"))
 
-    A --> B --> C --> D
-    D -- Да --> E --> I --> J
-    D -- Нет --> F --> I
+    A --> B --> C --> D --> E --> F --> G --> H
+    H -- true --> I --> DIR
+    DIR -- true --> J1 --> K --> L1 --> L2
+    L2 -- true --> L3a --> L2
+    L2 -- false --> M --> N --> O --> H
+    DIR -- false --> J2 --> K --> L1 --> L2
+    L2 -- true --> L3b --> L2
+    L2 -- false --> M --> N --> O --> H
+    H -- false --> P --> Q --> R
+

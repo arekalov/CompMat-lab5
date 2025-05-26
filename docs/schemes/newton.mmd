@@ -1,13 +1,16 @@
 graph TD
     A(("Начало"))
-    B[/"points: List<DataPoint>, x0: Double"/]
-    C["val n = points.size\nval table = InterpolationLogicController.buildFiniteDifferenceTable(points)\nval h = points[1].x - points[0].x\nval t = (x0 - points[0].x) / h\nvar result = table.differences[0][0]\nvar mult = 1.0" ]
-    D{"for (i in 1 until n)"}
-    E["mult *= (t - (i - 1))"]
-    F["result += table.differences[0][i] / InterpolationLogicController.factorial(i) * mult"]
-    I[Pair &lt;Double, String&gt; ]
+    B[/"Ввод: points, x0"/]
+    COEF["coef = InterpolationMethodsBase.dividedDifferences(points)"]
+    C["result = 0"]
+    D{{"1 <= i < points.size"}}
+    E["term = coef[k]"]
+    F{{"0 <= j < k"}}
+    G["term *= (x0 - points[j].x)"]
+    H["result += term"]
+    I[/"Возврат result"/]
     J(("Конец"))
 
-    A --> B --> C --> D
-    D -- Да --> E --> F --> D
-    D -- Нет --> I --> J 
+    A --> B --> COEF --> C --> D
+    D -- true --> E --> F -- true --> G --> F -- false --> H --> D
+    D -- false --> I --> J

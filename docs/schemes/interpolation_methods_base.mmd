@@ -1,0 +1,121 @@
+graph TD
+    subgraph Факториал
+        F1A(("Начало"))
+        F1B[/"Ввод: n"/]
+        F1C{{"n <= 1"}}
+        F1D[/"Возврат 1"/]
+        F1E[/"Возврат n * factorial(n-1)"/]
+        F1Z(("Конец"))
+        F1A --> F1B --> F1C
+        F1C -- true --> F1D --> F1Z
+        F1C -- false --> F1E --> F1Z
+    end
+
+    subgraph КонечныеРазности
+        F2A(("Начало"))
+        F2B[/"Ввод: points"/]
+        F2C["n = points.size"]
+        F2D["finDifs = [points.y]"]
+        F2E["k = 1"]
+        F2F{{"1 <= k < n"}}
+        F2G["last = finDifs.last()"]
+        F2H["row = [last[i+1] - last[i]"]
+        F2I["finDifs.add(row)"]
+        F2J["k++"]
+        F2K[/"Возврат finDifs"/]
+        F2Z(("Конец"))
+        F2A --> F2B --> F2C --> F2D --> F2E --> F2F
+        F2F -- true --> F2G --> F2H --> F2I --> F2J --> F2F
+        F2F -- false --> F2K --> F2Z
+    end
+
+    subgraph РазделённыеРазности
+        F3A(("Начало"))
+        F3B[/"Ввод: points"/]
+        F3C["n = points.size"]
+        F3D["coef = points.y"]
+        F3E["j = 1"]
+        F3F{{"1 <= j<= n"}}
+        F3G["i = n-1"]
+        F3H{{"i >= j"}}
+        F3I["coef[i] = (coef[i] - coef[i-1]) / (points[i].x - points[i-j].x)"]
+        F3J["i--"]
+        F3K["j++"]
+        F3L[/"Возврат coef"/]
+        F3Z(("Конец"))
+        F3A --> F3B --> F3C --> F3D --> F3E --> F3F
+        F3F -- true --> F3G --> F3H
+        F3H -- true --> F3I --> F3J --> F3H
+        F3H -- false --> F3K --> F3F
+        F3F -- false --> F3L --> F3Z
+    end
+
+    subgraph ПолучитьРезультат
+        F5A(("Начало"))
+        F5B[/"Ввод: points, x0, a, b, method, dx"/]
+        F5C["result = []"]
+        F5D["value = interpolate(points, x0, method)"]
+        F5E["x = a"]
+        F5F{"x <= b"}
+        F5G["result.add(DataPoint(x, interpolate(points, x, method)))"]
+        F5H["x += dx"]
+        F5I["points.forEach { result.add(it) }"]
+        F5J["result.add(DataPoint(x0, interpolate(points, x0, method)))"]
+        F5K["result.add(DataPoint(b, interpolate(points, b, method)))"]
+        F5L[/"Возврат InterpolationResult"/]
+        F5Z(("Конец"))
+        F5A --> F5B --> F5C --> F5D --> F5E --> F5F
+        F5F -- true --> F5G --> F5H --> F5F
+        F5F -- false --> F5I --> F5J --> F5K --> F5L --> F5Z
+    end
+
+    subgraph ПостроитьТаблицуКонечныхРазностей
+        F6A(("Начало"))
+        F6B[/"Ввод: points"/]
+        F6C["n = points.size"]
+        F6D["differences = Array(n) { DoubleArray(n) { 0.0 } }"]
+        F6E["points.forEach { i, p -> differences[i][0] = p.y }"]
+        F6F["j = 1"]
+        F6G{{"j < n"}}
+        F6H["i = 0"]
+        F6I{{"i < n-j"}}
+        F6J["differences[i][j] = differences[i+1][j-1] - differences[i][j-1]"]
+        F6K["i++"]
+        F6L["j++"]
+        F6M["differencesList = differences.map { it.toList() }"]
+        F6N[/"Возврат FiniteDifferenceTable(points.x, differencesList)"/]
+        F6Z(("Конец"))
+        F6A --> F6B --> F6C --> F6D --> F6E --> F6F --> F6G
+        F6G -- true --> F6H --> F6I
+        F6I -- true --> F6J --> F6K --> F6I
+        F6I -- false --> F6L --> F6G
+        F6G -- false --> F6M --> F6N --> F6Z
+    end
+
+    subgraph map
+        M1A(("Начало"))
+        M1B[/"Ввод: список, функция f"/]
+        M1C["result = []"]
+        M1D["i = 0"]
+        M1E{{"i < список.size"}}
+        M1F["result.add(f(список[i]))"]
+        M1G["i++"]
+        M1H[/"Возврат result"/]
+        M1Z(("Конец"))
+        M1A --> M1B --> M1C --> M1D --> M1E
+        M1E -- true --> M1F --> M1G --> M1E
+        M1E -- false --> M1H --> M1Z
+    end
+
+    subgraph forEach
+        FEA(("Начало"))
+        FEB[/"Ввод: список, функция f"/]
+        FEC["i = 0"]
+        FED{{"i < список.size"}}
+        FEE["f(список[i])"]
+        FEF["i++"]
+        FEZ(("Конец"))
+        FEA --> FEB --> FEC --> FED
+        FED -- true --> FEE --> FEF --> FED
+        FED -- false --> FEZ
+    end 
